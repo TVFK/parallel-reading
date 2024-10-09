@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+</head>
+<body>
+    <div data-th-each="book : ${books}">
+        <a data-th-href="@{/books/{id}(id=${book.getId()})}" data-th-text="${book.getTitle()} + ', ' + ${book.getPublishedDate()}">book</a>
+    </div>
+
+    <br/>
+    <hr/>
+
+    <a data-th-href="@{/books/create}">Create new book</a>
+
+    <br/>
+</body>
+</html>

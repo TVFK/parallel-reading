@@ -15,7 +15,8 @@
 
 	<modules>
 		<module>book-service</module>
-	</modules>
+        <module>admin-client</module>
+    </modules>
 
 	<properties>
 		<maven.compiler.source>21</maven.compiler.source>

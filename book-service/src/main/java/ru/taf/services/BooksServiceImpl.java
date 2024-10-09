@@ -41,6 +41,7 @@ public class BooksServiceImpl implements BooksService {
     }
 
     @Override
+    @Transactional
     public void deleteBook(int bookId) {
         booksRepository.deleteById(bookId);
     }
