@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.taf.entities.Book;
-import ru.taf.exceptions.BooksNotFoundException;
+import ru.taf.services.exceptions.BooksNotFoundException;
 import ru.taf.repositories.BooksRepository;
 
 import java.util.List;

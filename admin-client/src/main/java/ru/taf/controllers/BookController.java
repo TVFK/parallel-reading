@@ -47,7 +47,6 @@ public class BookController {
             model.addAttribute("errors", exception.getErrors());
             return "books/edit";
         }
-
     }
 
     @PostMapping("delete")

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.taf.entities.Page;
-import ru.taf.exceptions.PageNotFoundException;
+import ru.taf.services.exceptions.PageNotFoundException;
 import ru.taf.repositories.PagesRepository;
 
 import java.util.List;
