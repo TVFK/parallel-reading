@@ -23,6 +23,6 @@ public class PagesServiceImpl implements PagesService {
 
     @Override
     public List<Page> findAllPagesByBook(int bookId) {
-        return pagesRepository.findAllByBookId(bookId);
+        return pagesRepository.findAllPagesByBookId(bookId);
     }
 }

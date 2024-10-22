@@ -12,15 +12,20 @@ import java.util.Optional;
 public interface PagesRepository extends JpaRepository<Page, Integer> {
 
     @Query(nativeQuery = true, value = """
-            select * from pages p
-                join chapters c on c.id=p.chapter_id
-                    join books b on c.book_id=b.id
-                        where page_number=?1 and book_id=?2 ;""")
+            select p.id, p.chapter_id, p.page_number, p.content
+            from pages p
+            join chapters c on c.id = p.chapter_id
+            join books b on c.book_id = b.id
+            where p.page_number = ?1 and b.id = ?2
+            """)
     Optional<Page> findPageByPageNumberAndBookId(int pageNumber, int bookId);
 
     @Query(nativeQuery = true, value = """
-            select * from pages p
-                join chapters c on c.id=p.chapter_id
-                    join books b on c.book_id=b.id;""")
-    List<Page> findAllByBookId(int bookId);
+            select p.id, p.chapter_id, p.page_number, p.content
+            from pages p
+            join chapters c on c.id = p.chapter_id
+            join books b on c.book_id = b.id
+            where b.id = ?1
+            """)
+    List<Page> findAllPagesByBookId(int bookId);
 }

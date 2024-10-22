@@ -1,5 +1,6 @@
 package ru.taf.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class Page {
 
     @ManyToOne
     @JoinColumn(name = "chapter_id", referencedColumnName = "id")
+    @JsonBackReference
     private Chapter chapter;
 
     @Column(name = "page_number")

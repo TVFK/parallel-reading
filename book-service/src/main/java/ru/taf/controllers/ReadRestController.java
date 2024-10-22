@@ -17,7 +17,7 @@ public class ReadRestController {
 
     private final PagesService pagesService;
 
-    @GetMapping("/books{bookId}/pages/{pageNumber}")
+    @GetMapping("/books/{bookId}/pages/{pageNumber}")
     public Page getPage(@PathVariable("bookId") int bookId,
                         @PathVariable("pageNumber") int pageNumber){
         return pagesService.findPageByNumber(bookId, pageNumber);

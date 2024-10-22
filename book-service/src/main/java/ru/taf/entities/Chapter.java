@@ -1,5 +1,7 @@
 package ru.taf.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +25,7 @@ public class Chapter {
 
     @ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "id")
+    @JsonBackReference
     private Book book;
 
     @Column(name = "chapter_number")
@@ -32,5 +35,6 @@ public class Chapter {
     private String title;
 
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Page> pages;
 }

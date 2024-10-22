@@ -1,5 +1,6 @@
 package ru.taf.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,5 +39,6 @@ public class Book {
     private String description;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Chapter> chapters;
 }
