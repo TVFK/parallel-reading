@@ -1,7 +1,9 @@
 package ru.taf.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "Chapters")
+@Table(name = "Chapter")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,22 +21,19 @@ import java.util.List;
 public class Chapter {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "id")
-    @JsonBackReference
     private Book book;
 
-    @Column(name = "chapter_number")
-    private int chapterNumber;
+    @Column(name = "chapter_order")
+    private int chapterOrder;
 
     @Column(name = "title")
     private String title;
 
-    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "chapter", fetch = FetchType.LAZY)
     private List<Page> pages;
 }

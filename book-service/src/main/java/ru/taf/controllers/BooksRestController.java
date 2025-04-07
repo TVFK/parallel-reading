@@ -1,14 +1,14 @@
 package ru.taf.controllers;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
+import ru.taf.dto.BookDTO;
 import ru.taf.entities.Book;
+import ru.taf.mappers.BookMapper;
 import ru.taf.services.BooksService;
+import ru.taf.specifications.BookSpecifications;
 
 import java.util.List;
 
@@ -18,35 +18,45 @@ import java.util.List;
 public class BooksRestController {
 
     private final BooksService booksService;
+    private final BookMapper bookMapper;
 
     @GetMapping
-    public ResponseEntity<List<Book>> findBooks(
-            @RequestParam(value = "filter", required = false) String filter) {
+    public List<BookDTO> getFilteredBooks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String genres,
+            @RequestParam(required = false) String level,
+            @RequestParam(defaultValue = "publishedYear,asc") String sort) {
 
-        List<Book> books = booksService.findAllBooks(filter);
-        return ResponseEntity.ok(books);
+        Specification<Book> spec = BookSpecifications.withFilters(title, genres, level);
+        Sort sortOrder = Sort.by(Sort.Order.asc("publishedYear"));
+
+        if (sort != null) {
+            String[] sortParams = sort.split(",");
+            if (sortParams.length == 2) {
+                sortOrder = Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]);
+            }
+        }
+
+        return booksService.getBooks(spec, sortOrder)
+                .stream()
+                .map(bookMapper::toDto)
+                .toList();
     }
 
-    @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody Book book,
-                                    BindingResult bindingResult,
-                                    UriComponentsBuilder uriComponentsBuilder)
-            throws BindException {
-        if (bindingResult.hasErrors()) {
-            if (bindingResult instanceof BindException exception) {
-                throw exception;
-            } else {
-                throw new BindException(bindingResult);
-            }
-        } else {
-            Book createdBook = booksService.createBook(book);
 
-            return ResponseEntity
-                    .created(uriComponentsBuilder
-                            .path("/books/{bookId}")
-                            .buildAndExpand(createdBook.getId())
-                            .toUri())
-                    .body(createdBook);
-        }
+    @GetMapping("grouped-by-levels")
+    public List<List<BookDTO>> getBooksGroupByLevel() {
+        return booksService.getBooksGroupedByLevel()
+                .stream()
+                .map(booksGroup -> booksGroup
+                        .stream()
+                        .map(bookMapper::toDto)
+                        .toList())
+                .toList();
+    }
+
+    @GetMapping("{title}")
+    public BookDTO getBookByTitle(@PathVariable("title") String title){
+        return bookMapper.toDto(booksService.getBookByTitle(title));
     }
 }

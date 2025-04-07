@@ -16,7 +16,6 @@
 	<modules>
 		<module>book-service</module>
         <module>admin-client</module>
-        <module>mail-service</module>
     </modules>
 
 	<properties>

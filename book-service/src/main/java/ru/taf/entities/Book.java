@@ -8,10 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "Books")
+@Table(name = "Book")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,7 +21,6 @@ import java.util.List;
 public class Book {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -29,16 +30,29 @@ public class Book {
     @Column(name = "author")
     private String author;
 
-    @Column(name = "language")
-    private String language;
+    @Column(name = "image")
+    private String imageUrl;
 
-    @Column(name = "published_date")
-    private LocalDate publishedDate;
+    @Column(name = "published_year")
+    private String publishedYear;
+
+    @Column(name = "level")
+    private String level;
 
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @Column(name = "number_of_page")
+    private Integer numberOfPage;
+
+    @ManyToMany
+    @JoinTable(
+            name = "book_genre",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres = new HashSet<>();
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<Chapter> chapters;
 }

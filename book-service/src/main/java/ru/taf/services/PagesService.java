@@ -6,7 +6,11 @@ import java.util.List;
 
 public interface PagesService {
 
-    Page findPageByNumber(int bookId, int pageNumber);
+    Page findPageByNumber(Integer bookId, int pageNumber);
 
     List<Page> findAllPagesByBook(int bookId);
+
+    Page getNextPage(Integer pageId);
+
+    Page getPrevPage(Integer pageId);
 }
