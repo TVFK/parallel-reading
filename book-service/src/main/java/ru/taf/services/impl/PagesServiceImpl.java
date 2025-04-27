@@ -1,4 +1,4 @@
-package ru.taf.services;
+package ru.taf.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,6 +9,7 @@ import ru.taf.repositories.BooksRepository;
 import ru.taf.repositories.PagesRepository;
 import ru.taf.exceptions.BookNotFoundException;
 import ru.taf.exceptions.PageNotFoundException;
+import ru.taf.services.PagesService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,7 +32,7 @@ public class PagesServiceImpl implements PagesService {
         return pagesRepository.findAllPagesByBookId(bookId);
     }
 
-    // FIXME сделать нормальную реализацию (исправь эту хуйню)
+    // FIXME сделать нормальную реализацию
     @Override
     public Page getNextPage(Integer pageId) {
         return pagesRepository.findById(pageId+1).orElseThrow(() ->

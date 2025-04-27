@@ -2,6 +2,7 @@ package ru.taf.dto;
 
 import ru.taf.entities.Genre;
 
+import java.io.Serializable;
 import java.util.Set;
 
 public record BookDTO(
@@ -15,4 +16,4 @@ public record BookDTO(
         int numberOfPage,
         Set<GenreDTO> genres,
         String description
-) {}
+)implements Serializable {}

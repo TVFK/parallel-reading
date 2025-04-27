@@ -2,6 +2,7 @@ package ru.taf.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.taf.dto.BookDTO;
 import ru.taf.entities.Book;
 import ru.taf.services.BooksService;
 
