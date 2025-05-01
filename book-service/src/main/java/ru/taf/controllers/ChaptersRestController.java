@@ -15,13 +15,9 @@ import java.util.stream.Collectors;
 public class ChaptersRestController {
 
     private final ChaptersService chaptersService;
-    private final ChapterMapper chapterMapper;
 
     @GetMapping
     public List<ChapterDTO> getAllChaptersByBook(@PathVariable("bookId") Integer bookId) {
-        return chaptersService.getAllChapterByBookId(bookId)
-                .stream()
-                .map(chapterMapper::toDto)
-                .collect(Collectors.toList());
+        return chaptersService.getAllChapterByBookId(bookId);
     }
 }

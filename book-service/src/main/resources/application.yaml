@@ -10,7 +10,8 @@ spring:
     password: password
   cache:
     type: redis
-    cache-names: redis-cache
+    redis:
+      time-to-live: 86400000
   data:
     redis:
       host: localhost

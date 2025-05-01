@@ -17,13 +17,9 @@ import java.util.stream.Collectors;
 public class GenresRestController {
 
     private final GenresService genresService;
-    private final GenreMapper genreMapper;
 
     @GetMapping
     public List<GenreDTO> getGenres() {
-        return genresService.getAllGenres()
-                .stream()
-                .map(genreMapper::toDto)
-                .toList();
+        return genresService.getAllGenres();
     }
 }

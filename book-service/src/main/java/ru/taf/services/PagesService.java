@@ -1,16 +1,16 @@
 package ru.taf.services;
 
-import ru.taf.entities.Page;
+import ru.taf.dto.PageDTO;
 
 import java.util.List;
 
 public interface PagesService {
 
-    Page findPageByNumber(Integer bookId, int pageNumber);
+    PageDTO findPageByNumber(Integer bookId, int pageNumber);
 
-    List<Page> findAllPagesByBook(int bookId);
+    List<PageDTO> findAllPagesByBook(int bookId);
 
-    Page getNextPage(Integer pageId);
+    PageDTO getNextPage(Integer pageId);
 
-    Page getPrevPage(Integer pageId);
+    PageDTO getPrevPage(Integer pageId);
 }

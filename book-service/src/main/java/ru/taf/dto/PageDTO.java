@@ -3,6 +3,7 @@ package ru.taf.dto;
 import ru.taf.entities.Chapter;
 import ru.taf.entities.Sentence;
 
+import java.io.Serializable;
 import java.util.List;
 
 public record PageDTO(
@@ -10,5 +11,5 @@ public record PageDTO(
         int chapterId,
         int pageNumber,
         List<SentenceDTO> sentences
-) {
+) implements Serializable {
 }

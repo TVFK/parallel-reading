@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Sentence implements Serializable {
+public class Sentence {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

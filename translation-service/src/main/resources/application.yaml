@@ -1,0 +1,18 @@
+server:
+  port: 8081
+yandex:
+  dictionary:
+    api:
+      uri: https://dictionary.yandex.net/api/v1
+      key: ${YANDEX_DICT_API_KEY}
+      lang: en-ru
+spring:
+  cache:
+    type: redis
+    redis:
+      time-to-live: 86400000
+  data:
+    redis:
+      host: localhost
+      port: 6380
+      password: password

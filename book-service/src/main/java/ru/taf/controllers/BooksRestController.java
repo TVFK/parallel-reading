@@ -35,6 +35,7 @@ public class BooksRestController {
         return booksService.getBooksGroupedByLevel();
     }
 
+    // FIXME убрать нахуй
     @GetMapping("{title}")
     public BookDTO getBookByTitle(@PathVariable("title") String title){
         return booksService.getBookByTitle(title);
