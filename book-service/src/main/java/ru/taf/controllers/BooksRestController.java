@@ -29,13 +29,12 @@ public class BooksRestController {
         return booksService.getBooks(title, genres, level, sort);
     }
 
-
     @GetMapping("grouped-by-levels")
     public List<List<BookDTO>> getBooksGroupByLevel() {
         return booksService.getBooksGroupedByLevel();
     }
 
-    // FIXME убрать нахуй
+    // FIXME убрать
     @GetMapping("{title}")
     public BookDTO getBookByTitle(@PathVariable("title") String title){
         return booksService.getBookByTitle(title);

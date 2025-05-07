@@ -1,3 +1,5 @@
+# Parallel Reading
+
 ## Book Service
 
 The main microservice stores data about books, book pages, chapters
@@ -20,14 +22,17 @@ docker run -d --name books-service-cache -p 6379:6379 -e REDIS_PASSWORD=password
 
 ## Translation Service
 
-Responsible for the translation, temporarily caches the result. Implements translation using the Yandex Dictionary API
+Responsible for the translation, temporarily caches the result. Implements translation using the [Yandex Dictionary API](https://yandex.ru/dev/dictionary/).
+
+Since the Yandex Dictionary is based on machine learning technologies, some words need to be reduced to their basic form.
+To do this, the microservice uses [StanfordNLP](https://nlp.stanford.edu/) to find the lemma of a plural word, as well as regular past tense verbs.
 
 ### Redis
 
 **Used for caching**
 
 ```shell
-docker run -d --name translation-service-cache -p 6379:6380 -e REDIS_PASSWORD=password redis:latest --requirepass password
+docker run -d --name translation-service-cache -p 6380:6379 -e REDIS_PASSWORD=password redis:latest --requirepass password
 ```
 
 ### .env
