@@ -17,6 +17,7 @@
 		<module>book-service</module>
         <module>admin-client</module>
         <module>translation-service</module>
+        <module>dictionary-service</module>
     </modules>
 
 	<properties>

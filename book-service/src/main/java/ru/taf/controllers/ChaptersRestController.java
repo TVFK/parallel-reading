@@ -16,8 +16,9 @@ public class ChaptersRestController {
 
     private final ChaptersService chaptersService;
 
-    @GetMapping
-    public List<ChapterDTO> getAllChaptersByBook(@PathVariable("bookId") Integer bookId) {
-        return chaptersService.getAllChapterByBookId(bookId);
-    }
+
+@GetMapping
+public List<ChapterDTO> getAllChaptersByBook(@PathVariable("bookId") Integer bookId) {
+    return chaptersService.getAllChapterByBookId(bookId);
+}
 }

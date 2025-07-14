@@ -40,3 +40,11 @@ docker run -d --name translation-service-cache -p 6380:6379 -e REDIS_PASSWORD=pa
 The environment configuration file, stores:
 
 - YANDEX_DICT_API_KEY - API key for Yandex Dictionary can be obtained at https://yandex.ru/dev/dictionary/
+
+## Security
+
+**Keycloak for as an OAuth 2.0/OIDC server**
+
+```shell
+docker run --name keycloak -p 8082:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -v ./config/keycloak/import:/opt/keycloak/data/import quay.io/keycloak/keycloak:26.2 start-dev --import-realm
+```

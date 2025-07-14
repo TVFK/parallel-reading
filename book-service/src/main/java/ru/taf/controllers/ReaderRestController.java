@@ -3,11 +3,9 @@ package ru.taf.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.taf.dto.PageDTO;
-import ru.taf.mappers.PageMapper;
 import ru.taf.services.PagesService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +16,7 @@ public class ReaderRestController {
 
     @GetMapping("/books/{bookId}")
     public PageDTO getPageByNumberAndBookId(@PathVariable("bookId") Integer bookId,
-                                               @RequestParam("pageNumber") int pageNumber) {
+                                            @RequestParam("pageNumber") int pageNumber) {
         return pagesService.findPageByNumber(bookId, pageNumber);
     }
 

@@ -1,10 +1,27 @@
 server:
-  port: 8081
+  port: 8083
 
 spring:
   application:
     name: admin-client
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8082/realms/boolkus
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: admin-app
+            client-secret: drHE0eBoRAENaroK59E993VqfSp9pham
+            scope:
+              - openid
+              - microprofile-jwt
+              - view_books
+              - edit_books
 
 services:
   books:
     uri: http://localhost:8080
+    registration-id: keycloak

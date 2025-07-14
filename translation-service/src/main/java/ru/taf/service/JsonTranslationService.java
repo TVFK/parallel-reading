@@ -25,7 +25,6 @@ public class JsonTranslationService implements TranslationService {
     @Cacheable(value = "translation", key = "#text")
     public DefaultJsonTranslationResponse getTranslation(String text, String ui, Integer flags) {
         String lemma = getLemma(text);
-        System.out.println(lemma);
 
         YandexDictionaryResponse yandexResponse = yandexDictClient.getJsonTranslation(lemma, ui, flags);
         return mapToDefaultResponse(yandexResponse);
