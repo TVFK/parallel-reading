@@ -41,6 +41,17 @@ The environment configuration file, stores:
 
 - YANDEX_DICT_API_KEY - API key for Yandex Dictionary can be obtained at https://yandex.ru/dev/dictionary/
 
+## Dictionary Service
+
+Responsible for managing user flashcards and vocabulary tracking. Keycloak id (sub) is used to identify users.
+
+### PostgreSQL
+
+**Used for store dictionary cards and users**
+
+```shell
+docker run --name dictionary-db -p 5434:5432 -e POSTGRES_DB=dictionary-db -e POSTGRES_USER=username -e POSTGRES_PASSWORD=password postgres:16
+```
 ## Security
 
 **Keycloak for as an OAuth 2.0/OIDC server**

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.taf.dto.GenreDTO;
-import ru.taf.mappers.GenreMapper;
+import ru.taf.dto.mappers.GenreMapper;
 import ru.taf.repositories.GenresRepository;
 import ru.taf.services.GenresService;
 

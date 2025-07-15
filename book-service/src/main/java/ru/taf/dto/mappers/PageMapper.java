@@ -1,4 +1,4 @@
-package ru.taf.mappers;
+package ru.taf.dto.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

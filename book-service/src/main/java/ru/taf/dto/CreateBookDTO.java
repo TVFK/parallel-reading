@@ -7,13 +7,13 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record CreateBookDTO(
-        @NotNull(message = "{books.create.errors.title_is_null}")
-        @Size(min = 1, max = 50, message = "{books.create.errors.title_size_is_invalid}")
-        @NotBlank(message = "{books.create.errors.title_is_blank}")
+        @NotNull(message = "{books.create.errors.title_is_null")
+        @Size(min = 1, max = 50, message = "{books.create.errors.title_size_is_invalid")
+        @NotBlank(message = "{books.create.errors.title_is_blank")
         String title,
 
         @NotNull(message = "{books.create.errors.author_is_null}")
-        @Size(min = 1, max = 100, message = "{books.create.errors.author_size_is_invalid}")
+        @Size(min = 1, max = 100, message = "{books.create.errors.author_size_is_invalid")
         @NotBlank(message = "{books.create.errors.author_is_blank}")
         String author,
 

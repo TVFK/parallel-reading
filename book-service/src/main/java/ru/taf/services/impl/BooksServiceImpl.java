@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.taf.dto.BookDTO;
 import ru.taf.entities.Book;
 import ru.taf.exceptions.BookNotFoundException;
-import ru.taf.mappers.BookMapper;
+import ru.taf.dto.mappers.BookMapper;
 import ru.taf.repositories.BooksRepository;
 import ru.taf.services.BooksService;
 import ru.taf.specifications.BookSpecifications;

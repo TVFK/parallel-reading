@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.taf.dto.PageDTO;
 import ru.taf.entities.Page;
-import ru.taf.mappers.PageMapper;
+import ru.taf.dto.mappers.PageMapper;
 import ru.taf.repositories.PagesRepository;
 import ru.taf.exceptions.PageNotFoundException;
 import ru.taf.services.PagesService;

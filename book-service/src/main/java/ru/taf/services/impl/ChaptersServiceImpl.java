@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.taf.dto.ChapterDTO;
 import ru.taf.entities.Chapter;
-import ru.taf.mappers.ChapterMapper;
+import ru.taf.dto.mappers.ChapterMapper;
 import ru.taf.repositories.ChaptersRepository;
 import ru.taf.services.ChaptersService;
 

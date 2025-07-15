@@ -1,4 +1,4 @@
-package ru.taf.mappers;
+package ru.taf.dto.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -10,4 +10,5 @@ import ru.taf.entities.Book;
         uses = GenreMapper.class)
 public interface BookMapper {
     BookDTO toDto(Book book);
+
 }
