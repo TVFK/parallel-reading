@@ -12,25 +12,26 @@ import ru.taf.dto.DictionaryCardDTO;
 import ru.taf.dto.UpdateDictionaryCardDTO;
 import ru.taf.services.DictionaryService;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/dictionary/{cardId:\\d+}")
+@RequestMapping("/dictionary/{cardId}")
 public class DictCardRestController {
 
     private final DictionaryService dictionaryService;
 
-
     @GetMapping
     public ResponseEntity<DictionaryCardDTO> getDictCardById(
-            @PathVariable("cardId") Integer cardId
-    ){
+            @PathVariable("cardId") UUID cardId
+    ) {
         DictionaryCardDTO dictCard = dictionaryService.getDictionaryCardById(cardId);
         return ResponseEntity.ok(dictCard);
     }
 
     @PatchMapping
     public ResponseEntity<?> updateDictionaryCard(
-            @PathVariable("cardId") Integer cardId,
+            @PathVariable("cardId") UUID cardId,
             @Valid @RequestBody UpdateDictionaryCardDTO card,
             BindingResult bindingResult,
             @AuthenticationPrincipal Jwt jwt
@@ -44,9 +45,10 @@ public class DictCardRestController {
         dictionaryService.updateDictCard(userId, cardId, card);
         return ResponseEntity.noContent().build();
     }
+
     @DeleteMapping
     public ResponseEntity<Void> deleteDictionaryCard(
-            @PathVariable("cardId") Integer cardId,
+            @PathVariable("cardId") UUID cardId,
             @AuthenticationPrincipal Jwt jwt
     ) {
         dictionaryService.deleteCard(jwt.getSubject(), cardId);

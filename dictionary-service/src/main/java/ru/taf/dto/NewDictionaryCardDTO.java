@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
 
+import java.util.Set;
+
 public record NewDictionaryCardDTO(
 
         @NotNull(message = "word can't be null")
@@ -21,6 +23,8 @@ public record NewDictionaryCardDTO(
         String context,
 
         @Range(min = 1, max = 3, message = "Diff must be between 1 and 3")
-        int difficulty
+        int difficulty,
+
+        Set<String> tags
 ) {
 }

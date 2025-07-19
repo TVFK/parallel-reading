@@ -1,13 +1,17 @@
 package ru.taf.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.Set;
+import java.util.UUID;
 
-public record DictionaryCardDTO (
+public record DictionaryCardDTO(
+        UUID id,
         String word,
         String translation,
         String context,
-        LocalDateTime createdAt,
-        LocalDateTime nextReviewDate,
-        int difficulty
+        LocalDate createdAt,
+        LocalDate nextReviewDate,
+        int difficulty,
+        Set<String> tags
 ) {
 }

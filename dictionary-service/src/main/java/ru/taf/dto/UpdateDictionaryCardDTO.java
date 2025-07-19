@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.Set;
+
 public record UpdateDictionaryCardDTO(
 
         @NotNull(message = "word can't be null")
@@ -17,6 +19,8 @@ public record UpdateDictionaryCardDTO(
         String translation,
 
         @NotBlank(message = "translation can't be empty")
-        String context
+        String context,
+
+        Set<String> tags
 ) {
 }

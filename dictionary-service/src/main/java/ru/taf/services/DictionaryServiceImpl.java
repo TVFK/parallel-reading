@@ -1,10 +1,15 @@
 package ru.taf.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.taf.dto.DictionaryCardDTO;
 import ru.taf.dto.NewDictionaryCardDTO;
+import ru.taf.dto.ReviewCardDTO;
 import ru.taf.dto.UpdateDictionaryCardDTO;
 import ru.taf.dto.mappers.DictionaryCardMapper;
 import ru.taf.entities.DictionaryCard;
@@ -13,7 +18,8 @@ import ru.taf.exceptions.AccessDeniedException;
 import ru.taf.exceptions.DictionaryCardNotFoundException;
 import ru.taf.repositories.DictionaryCardRepository;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +31,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     private final DictionaryCardMapper cardMapper;
 
     @Override
-    public DictionaryCardDTO getDictionaryCardById(Integer cardId) {
+    public DictionaryCardDTO getDictionaryCardById(UUID cardId) {
         DictionaryCard dictionaryCard = cardRepository.findById(cardId).orElseThrow(() ->
                 new DictionaryCardNotFoundException("dictionary_card.not_found"));
 
@@ -33,12 +39,23 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public List<DictionaryCardDTO> getUserDictCards(String userId) {
-        List<DictionaryCard> dictionaryCardList = cardRepository.findAllByUserId(userId);
+    public Page<DictionaryCardDTO> getUserDictCards(String userId, int page, int size, String sortBy) {
+        Sort sort = switch (sortBy) {
+            case "alphabet" -> Sort.by("word").ascending();
+            case "review" -> Sort.by("nextReviewDate").ascending();
+            case "difficulty" -> Sort.by("difficulty").descending();
+            default -> Sort.by("createdAt").descending();
+        };
 
-        return dictionaryCardList.stream()
-                .map(cardMapper::toDto)
-                .toList();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return cardRepository.findAllByUserId(userId, pageable).map(cardMapper::toDto);
+    }
+
+    @Override
+    public Page<DictionaryCardDTO> getCardsForReview(String userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return cardRepository.findByUserIdAndNextReviewDateLessThanEqual(userId, LocalDate.now(), pageable)
+                .map(cardMapper::toDto);
     }
 
     @Override
@@ -49,6 +66,13 @@ public class DictionaryServiceImpl implements DictionaryService {
 
         DictionaryCard dictionaryCard = cardMapper.toEntity(dictionaryCardDTO);
         dictionaryCard.setUser(user);
+        dictionaryCard.setCreatedAt(LocalDate.now());
+
+        dictionaryCard.setDifficulty(2);
+        dictionaryCard.setRepetitionCount(0);
+        dictionaryCard.setEaseFactor(2.5);
+        dictionaryCard.setIntervalDays(1);
+        dictionaryCard.setNextReviewDate(LocalDate.now());
 
         DictionaryCard createdDictCard = cardRepository.save(dictionaryCard);
 
@@ -57,11 +81,11 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     @Transactional
-    public void updateDictCard(String userId, Integer cardId, UpdateDictionaryCardDTO dictionaryCardDTO) {
+    public void updateDictCard(String userId, UUID cardId, UpdateDictionaryCardDTO dictionaryCardDTO) {
 
         cardRepository.findById(cardId)
                 .ifPresentOrElse(card -> {
-                    if(!card.getUser().getId().equals(userId)){
+                    if (!card.getUser().getId().equals(userId)) {
                         throw new AccessDeniedException("You don't have permission to perform this action");
                     }
 
@@ -76,7 +100,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     @Transactional
-    public void deleteCard(String userId, Integer cardId) {
+    public void deleteCard(String userId, UUID cardId) {
         DictionaryCard card = cardRepository.findById(cardId).orElseThrow(() ->
                 new DictionaryCardNotFoundException("dictionary_card.not_found")
         );
@@ -84,5 +108,51 @@ public class DictionaryServiceImpl implements DictionaryService {
             throw new AccessDeniedException("You don't have permission to perform this action");
         }
         cardRepository.deleteById(cardId);
+    }
+
+    @Override
+    @Transactional
+    public void reviewCard(String userId, ReviewCardDTO reviewDTO) {
+        DictionaryCard card = cardRepository.findById(reviewDTO.cardId())
+                .orElseThrow(() -> new DictionaryCardNotFoundException("dictionary_card.not_found"));
+
+        if (!card.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("You don't have permission to perform this action");
+        }
+
+        card.setDifficulty(reviewDTO.difficulty());
+
+        updateCardWithSM2(card);
+
+        cardRepository.save(card);
+    }
+
+    private void updateCardWithSM2(DictionaryCard card) {
+        int difficulty = card.getDifficulty();
+        int repetitions = card.getRepetitionCount();
+        double easeFactor = card.getEaseFactor();
+        int interval = card.getIntervalDays();
+
+        if (difficulty < 2) {
+            repetitions = 0;
+            interval = 1;
+        } else {
+            easeFactor = Math.max(1.3, easeFactor + (0.1 - (3 - difficulty) * (0.08 + (3 - difficulty) * 0.02)));
+
+            if (repetitions == 0) {
+                interval = 1;
+            } else if (repetitions == 1) {
+                interval = 3;
+            } else {
+                interval = (int) Math.ceil(interval * easeFactor);
+            }
+
+            repetitions++;
+        }
+
+        card.setRepetitionCount(repetitions);
+        card.setEaseFactor(easeFactor);
+        card.setIntervalDays(interval);
+        card.setNextReviewDate(LocalDate.now().plusDays(interval));
     }
 }
