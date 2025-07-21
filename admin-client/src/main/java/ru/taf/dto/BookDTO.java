@@ -9,14 +9,14 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateBookDTO {
+public class BookDTO {
+    private int id;
     private String title;
-
     private String author;
-
-    private String publishedYear;
-
+    private String imageUrl;
     private String level;
-
+    private String publishedYear;
+    private int numberOfPage;
     private String description;
+    private String image;
 }

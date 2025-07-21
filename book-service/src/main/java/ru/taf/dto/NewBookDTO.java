@@ -26,6 +26,8 @@ public record NewBookDTO(
 
         List<GenreDTO> genres,
 
+        String imageUrl,
+
         @NotNull(message = "{books.create.errors.description_is_null}")
         @Size(max = 500, message = "{books.create.errors.description_size_is_invalid}")
         String description

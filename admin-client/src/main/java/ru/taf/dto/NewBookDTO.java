@@ -1,19 +1,27 @@
 package ru.taf.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
-public record NewBookDTO(
-        String title,
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class NewBookDTO {
+    private String title;
 
-        String author,
+    private String author;
 
-        String level,
+    private String level;
 
-        String publishedYear,
+    private String publishedYear;
 
-        List<String> genres,
+    private List<String> genres;
 
-        String description,
-        String image
-) {
+    private String description;
+    private String coverImageKey;
 }

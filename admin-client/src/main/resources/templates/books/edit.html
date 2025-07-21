@@ -5,7 +5,7 @@
     <title>edit book</title>
 </head>
 <body>
-<form data-th-method="POST" data-th-action="@{/books/{id}/edit(id=${book.id})}" data-th-object="${book}">
+<form data-th-method="POST" data-th-action="@{/books/{id}/edit(id=${book.getId()})}" data-th-object="${book}">
     <label for="title">Book title</label>
     <input id="title" type="text" data-th-field="*{title}">
     <div style="color: red" data-th-if="${#fields.hasErrors('title')}" data-th-errors="*{title}">Title error</div>

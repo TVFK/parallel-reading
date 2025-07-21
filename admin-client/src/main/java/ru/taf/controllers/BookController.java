@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.taf.client.BooksRestClient;
 import ru.taf.client.exception.BadRequestException;
-import ru.taf.dto.Book;
+import ru.taf.dto.BookDTO;
 import ru.taf.dto.UpdateBookDTO;
 
 @Controller
@@ -19,7 +19,7 @@ public class BookController {
     private final BooksRestClient booksClient;
 
     @ModelAttribute("book")
-    public Book book(@PathVariable("bookId") int bookId){
+    public BookDTO book(@PathVariable("bookId") int bookId){
         return booksClient.findBook(bookId);
     }
 
@@ -35,16 +35,16 @@ public class BookController {
 
     @PostMapping("edit")
     public String edit(@PathVariable("bookId") int bookId,
-                       @ModelAttribute("book") Book book,
+                       @ModelAttribute("book") BookDTO book,
                        HttpServletResponse response,
                        Model model){
         try {
             UpdateBookDTO updateBookDTO = new UpdateBookDTO(
-                    book.title(),
-                    book.author(),
-                    book.publishedYear(),
-                    book.level(),
-                    book.description()
+                    book.getTitle(),
+                    book.getAuthor(),
+                    book.getPublishedYear(),
+                    book.getLevel(),
+                    book.getDescription()
             );
             booksClient.updateBook(updateBookDTO, bookId);
             return "redirect:/books/%d".formatted(bookId);

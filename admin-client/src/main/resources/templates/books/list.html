@@ -6,7 +6,7 @@
 </head>
 <body>
     <div data-th-each="book : ${books}">
-        <a data-th-href="@{/books/{id}(id=${book.id()})}" data-th-text="${book.title()} + ', ' + ${book.publishedYear()}">book</a>
+        <a data-th-href="@{/books/{id}(id=${book.getId()})}" data-th-text="${book.getTitle()} + ', ' + ${book.getPublishedYear()}">book</a>
     </div>
 
     <br/>

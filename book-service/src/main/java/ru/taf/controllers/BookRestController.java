@@ -35,6 +35,7 @@ public class BookRestController {
             BindingResult bindingResult
     ) throws BindException {
 
+        System.out.println(bookDTO);
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }

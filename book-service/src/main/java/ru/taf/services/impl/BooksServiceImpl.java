@@ -95,7 +95,7 @@ public class BooksServiceImpl implements BooksService {
                 .ifPresentOrElse(book -> {
                     book.setAuthor(bookDTO.author());
                     book.setTitle(bookDTO.title());
-                    book.setPublishedYear(bookDTO.publisherYear());
+                    book.setPublishedYear(bookDTO.publishedYear());
                     book.setDescription(bookDTO.description());
                 }, () -> {
                     throw new BookNotFoundException("book.not_found", bookId);

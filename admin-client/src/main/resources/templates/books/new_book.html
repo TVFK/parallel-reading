@@ -1,49 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Create new book</title>
+    <style>
+        .error { color: red; }
+        .genre-container { margin-bottom: 15px; }
+        .genre-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+
+        .genre-tag-remove {
+            margin-left: 5px;
+            cursor: pointer;
+            color: #666;
+        }
+        #genreInput { width: 200px; }
+    </style>
 </head>
 <body>
-    <form method="POST" data-th-action="@{/books/create}" data-th-object="${book}">
-        <label for="title">Book title</label>
-        <input id="title" type="text" data-th-field="*{title}">
-        <div style="color: red" data-th-if="${#fields.hasErrors('title')}" data-th-errors="*{title}">Title error</div>
+<h1>Create New Book</h1>
 
-        <br/>
+<form method="POST" th:action="@{/books/create}" enctype="multipart/form-data" th:object="${book}">
+    <div>
+        <label for="title">Book title*</label>
+        <input id="title" type="text" th:field="*{title}" required>
+        <div class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+    </div>
 
-        <label for="author">Author</label>
-        <input id="author" type="text" data-th-field="*{author}">
-        <div style="color: red" data-th-if="${#fields.hasErrors('author')}" data-th-errors="*{author}">Author error</div>
+    <div>
+        <label for="author">Author*</label>
+        <input id="author" type="text" th:field="*{author}" required>
+        <div class="error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+    </div>
 
-        <br/>
+    <div>
+        <label for="publishedYear">Published Year*</label>
+        <input id="publishedYear" type="number" th:field="*{publishedYear}" max="2025" required>
+        <div class="error" th:if="${#fields.hasErrors('publishedYear')}" th:errors="*{publishedYear}"></div>
+    </div>
 
-        <label for="publishedYear">published year</label>
-        <input id="publishedYear" type="text" data-th-field="*{publishedYear}">
-        <div style="color: red" data-th-if="${#fields.hasErrors('publishedYear')}" data-th-errors="*{publishedYear}">Year error</div>
+    <div>
+        <label for="level">Level*</label>
+        <select id="level" th:field="*{level}" required>
+            <option value="">Select Level</option>
+            <option value="A1">A1 (Beginner)</option>
+            <option value="A2">A2 (Elementary)</option>
+            <option value="B1">B1 (Intermediate)</option>
+            <option value="B2">B2 (Upper-Intermediate)</option>
+            <option value="C1">C1 (Advanced)</option>
+            <option value="C2">C2 (Proficiency)</option>
+        </select>
+        <div class="error" th:if="${#fields.hasErrors('level')}" th:errors="*{level}"></div>
+    </div>
 
-        <br/>
+    <div>
+        <label for="description">Description</label>
+        <textarea id="description" th:field="*{description}" rows="3"></textarea>
+        <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+    </div>
 
-        <label for="level">level</label>
-        <input id="level" type="text" data-th-field="*{level}">
-        <div style="color: red" data-th-if="${#fields.hasErrors('level')}" data-th-errors="*{level}">Level error</div>
+    <div class="genre-container">
+        <label for="genreInput">Genres (add one by one)</label>
+        <div>
+            <input type="text" id="genreInput" placeholder="Enter genre and press Enter or click Add">
+            <button type="button" id="addGenreBtn">Add</button>
+        </div>
+        <div class="genre-tags" id="genreTags"></div>
+        <input type="hidden" id="genres" name="genres" th:value="${#strings.listJoin(book.genres, ',')}">
+    </div>
 
-        <br/>
+    <div>
+        <label for="coverImage">Cover Image*</label>
+        <input id="coverImage" type="file" name="coverImage" accept="image/*" required>
+    </div>
 
-        <label for="description">description</label>
-        <input id="description" type="text" data-th-field="*{description}">
-        <div style="color: red" data-th-if="${#fields.hasErrors('description')}" data-th-errors="*{description}">Description error</div>
+    <div>
+        <label for="originalFile">Original Text (PDF)*</label>
+        <input id="originalFile" type="file" name="originalFile" accept="application/pdf" required>
+    </div>
 
-        <br/>
+    <div>
+        <label for="translatedFile">Translated Text (PDF)*</label>
+        <input id="translatedFile" type="file" name="translatedFile" accept="application/pdf" required>
+    </div>
 
-        <label for="image">image</label>
-        <input id="image" type="text" data-th-field="*{image}">
-        <div style="color: red" data-th-if="${#fields.hasErrors('image')}" data-th-errors="*{image}">Image error</div>
+    <hr>
+    <button type="submit">Create Book</button>
 
-        <br/>
-        <hr/>
+    <div th:if="${error != null}" class="error" th:text="${error}"></div>
+</form>
 
-        <input type="submit" value="Create book">
-    </form>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const genreInput = document.getElementById('genreInput');
+        const addGenreBtn = document.getElementById('addGenreBtn');
+        const genreTags = document.getElementById('genreTags');
+        const genresHidden = document.getElementById('genres');
+
+        if (genresHidden.value) {
+            genresHidden.value.split(',').forEach(genre => {
+                if (genre.trim()) {
+                    addGenreTag(genre.trim());
+                }
+            });
+        }
+
+        function addGenreTag(genre) {
+            if (!genre) return;
+
+            const tag = document.createElement('div');
+            tag.className = 'genre-tag';
+            tag.innerHTML = `
+                ${genre}
+                <span class="genre-tag-remove">×</span>
+            `;
+
+            const removeBtn = tag.querySelector('.genre-tag-remove');
+            removeBtn.addEventListener('click', function() {
+                tag.remove();
+                updateHiddenGenres();
+            });
+
+            genreTags.appendChild(tag);
+            updateHiddenGenres();
+        }
+
+        function updateHiddenGenres() {
+            const tags = Array.from(document.querySelectorAll('.genre-tag'))
+                .map(tag => tag.textContent.replace('×', '').trim());
+            genresHidden.value = tags.join(',');
+        }
+
+        function addGenre() {
+            const genre = genreInput.value.trim();
+            if (genre) {
+                addGenreTag(genre);
+                genreInput.value = '';
+            }
+        }
+
+        addGenreBtn.addEventListener('click', addGenre);
+
+        genreInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addGenre();
+            }
+        });
+    });
+</script>
 </body>
 </html>

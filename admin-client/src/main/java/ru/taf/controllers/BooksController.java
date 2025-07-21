@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.taf.client.BooksRestClient;
 import ru.taf.client.exception.BadRequestException;
-import ru.taf.dto.Book;
+import ru.taf.dto.BookDTO;
 import ru.taf.dto.NewBookDTO;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class BooksController {
     public String getListOfBooks(Model model,
                                  @RequestParam(value = "filter", required = false) String filter) {
 
-        List<Book> books = booksClient.findAllBooks(filter);
+        List<BookDTO> books = booksClient.findAllBooks(filter);
         model.addAttribute("books", books);
         return "books/list";
     }
@@ -41,8 +41,8 @@ public class BooksController {
                          @ModelAttribute("book") NewBookDTO book,
                          HttpServletResponse response) {
         try {
-            Book createdBook = booksClient.createBook(book);
-            return "redirect:/books/%d".formatted(createdBook.id());
+            BookDTO createdBook = booksClient.createBook(book);
+            return "redirect:/books/%d".formatted(createdBook.getId());
         } catch (BadRequestException exception) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             model.addAttribute("book", book);
