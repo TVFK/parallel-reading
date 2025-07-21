@@ -117,6 +117,7 @@ public class BooksServiceImpl implements BooksService {
         if(entity.getNumberOfPage() == null || entity.getNumberOfPage() == 0){
             entity.setNumberOfPage(1);
         }
+        entity.setImageUrl("lalals");
 
         Book createdBook = booksRepository.save(entity);
         return bookMapper.toDto(createdBook);

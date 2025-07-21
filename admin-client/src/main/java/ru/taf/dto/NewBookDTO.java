@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -20,7 +21,7 @@ public class NewBookDTO {
 
     private String publishedYear;
 
-    private List<String> genres;
+    private Set<String> genres;
 
     private String description;
     private String coverImageKey;

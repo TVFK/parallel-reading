@@ -59,3 +59,16 @@ docker run --name dictionary-db -p 5434:5432 -e POSTGRES_DB=dictionary-db -e POS
 ```shell
 docker run --name keycloak -p 8082:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -v ./config/keycloak/import:/opt/keycloak/data/import quay.io/keycloak/keycloak:26.2 start-dev --import-realm
 ```
+
+## Minio
+
+Storage images and files
+
+```shell
+docker run -p 9000:9000 -p 9001:9001 \
+    -e "MINIO_ROOT_USER=admin" \
+    -e "MINIO_ROOT_PASSWORD=password" \
+    --name minio \
+    -v minio_data:/data \
+    minio/minio server /data --console-address ":9001"
+```

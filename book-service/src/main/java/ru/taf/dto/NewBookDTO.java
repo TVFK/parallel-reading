@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public record NewBookDTO(
         @NotNull(message = "{books.create.errors.title_is_null")
@@ -24,7 +25,7 @@ public record NewBookDTO(
         @NotNull(message = "{books.create.errors.publisherDate_is_null}")
         String publishedYear,
 
-        List<GenreDTO> genres,
+        Set<String> genres,
 
         String imageUrl,
 

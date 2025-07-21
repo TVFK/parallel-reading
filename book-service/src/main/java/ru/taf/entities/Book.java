@@ -43,7 +43,7 @@ public class Book {
     @Column(name = "number_of_page")
     private Integer numberOfPage;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "book_genre",
             joinColumns = @JoinColumn(name = "book_id"),
