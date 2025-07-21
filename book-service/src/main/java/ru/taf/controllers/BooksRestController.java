@@ -1,8 +1,14 @@
 package ru.taf.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 import ru.taf.dto.BookDTO;
+import ru.taf.dto.NewBookDTO;
 import ru.taf.services.BooksService;
 
 import java.util.List;
@@ -29,9 +35,23 @@ public class BooksRestController {
         return booksService.getBooksGroupedByLevel();
     }
 
-    // FIXME убрать
-    @GetMapping("{title}")
-    public BookDTO getBookByTitle(@PathVariable("title") String title){
-        return booksService.getBookByTitle(title);
+    @PostMapping
+    public ResponseEntity<?> createDictionaryCard(
+            @Valid @RequestBody NewBookDTO newBook,
+            BindingResult bindingResult,
+            UriComponentsBuilder uriComponentsBuilder
+    ) throws BindException {
+
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+
+        BookDTO createdBook = booksService.createBook(newBook);
+
+        // FIXME поменять путь
+        return ResponseEntity.created(
+                uriComponentsBuilder.path("/books")
+                        .build().toUri()
+        ).body(createdBook);
     }
 }

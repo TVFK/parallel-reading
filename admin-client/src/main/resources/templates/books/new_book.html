@@ -14,25 +14,31 @@
 
         <label for="author">Author</label>
         <input id="author" type="text" data-th-field="*{author}">
-        <div style="color: red" data-th-if="${#fields.hasErrors('author')}" data-th-errors="*{author}">Title error</div>
+        <div style="color: red" data-th-if="${#fields.hasErrors('author')}" data-th-errors="*{author}">Author error</div>
 
         <br/>
 
-        <label for="publishedDate">published date</label>
-        <input id="publishedDate" type="date" data-th-field="*{publishedDate}">
-        <div style="color: red" data-th-if="${#fields.hasErrors('publishedDate')}" data-th-errors="*{publishedDate}">Title error</div>
+        <label for="publishedYear">published year</label>
+        <input id="publishedYear" type="text" data-th-field="*{publishedYear}">
+        <div style="color: red" data-th-if="${#fields.hasErrors('publishedYear')}" data-th-errors="*{publishedYear}">Year error</div>
 
         <br/>
 
-        <label for="language">language</label>
-        <input id="language" type="text" data-th-field="*{language}">
-        <div style="color: red" data-th-if="${#fields.hasErrors('language')}" data-th-errors="*{language}">Title error</div>
+        <label for="level">level</label>
+        <input id="level" type="text" data-th-field="*{level}">
+        <div style="color: red" data-th-if="${#fields.hasErrors('level')}" data-th-errors="*{level}">Level error</div>
 
         <br/>
 
         <label for="description">description</label>
         <input id="description" type="text" data-th-field="*{description}">
-        <div style="color: red" data-th-if="${#fields.hasErrors('description')}" data-th-errors="*{description}">Title error</div>
+        <div style="color: red" data-th-if="${#fields.hasErrors('description')}" data-th-errors="*{description}">Description error</div>
+
+        <br/>
+
+        <label for="image">image</label>
+        <input id="image" type="text" data-th-field="*{image}">
+        <div style="color: red" data-th-if="${#fields.hasErrors('image')}" data-th-errors="*{image}">Image error</div>
 
         <br/>
         <hr/>

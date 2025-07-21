@@ -9,7 +9,9 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.taf.client.exception.BadRequestException;
 import ru.taf.client.exception.BookNotFoundException;
-import ru.taf.entities.Book;
+import ru.taf.dto.Book;
+import ru.taf.dto.NewBookDTO;
+import ru.taf.dto.UpdateBookDTO;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +24,7 @@ public class BooksRestClientImpl implements BooksRestClient {
     @Override
     public List<Book> findAllBooks(String filter) {
         UriComponentsBuilder uri = UriComponentsBuilder.fromUriString("/books")
-                .queryParam("filter", filter);
+                .queryParam("title", filter);
 
         return restClient.get()
                 .uri(uri.toUriString())
@@ -42,8 +44,9 @@ public class BooksRestClientImpl implements BooksRestClient {
         }
     }
 
+    // TODO дохуя всего сделать...
     @Override
-    public Book createBook(Book book) {
+    public Book createBook(NewBookDTO book) {
         try{
             return restClient.post()
                     .uri("books")
@@ -59,7 +62,7 @@ public class BooksRestClientImpl implements BooksRestClient {
     }
 
     @Override
-    public void updateBook(Book book, Integer bookId) {
+    public void updateBook(UpdateBookDTO book, Integer bookId) {
         try {
             restClient.patch()
                     .uri("books/{bookId}", bookId)

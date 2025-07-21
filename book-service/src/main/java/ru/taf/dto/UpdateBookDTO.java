@@ -17,11 +17,10 @@ public record UpdateBookDTO(
         @NotBlank(message = "{books.update.errors.author_is_blank}")
         String author,
 
-        @NotNull(message = "{books.update.errors.language_is_null}")
-        String language,
-
         @NotNull(message = "{books.update.errors.publisherDate_is_null}")
-        LocalDate publisherDate,
+        String publisherYear,
+
+        String level,
 
         @NotNull(message = "{books.update.errors.description_is_null}")
         @Size(max = 500, message = "books.update.errors.description_size_is_invalid")

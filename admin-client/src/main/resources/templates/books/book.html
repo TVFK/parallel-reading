@@ -5,19 +5,19 @@
     <title>Book</title>
 </head>
 <body>
-    <div data-th-text="'Название ' + ${book.getTitle()}"></div>
-    <div data-th-text="'Автор ' + ${book.getAuthor()}"></div>
-    <div data-th-text="'Год издания ' + ${book.getPublishedDate()}"></div>
-    <div data-th-text="'Описание ' + ${book.getDescription()}"></div>
-    <div data-th-text="'Язык '  + ${book.getLanguage()}"></div>
+    <div data-th-text="'Название: ' + ${book.title()}"></div>
+    <div data-th-text="'Автор: ' + ${book.author()}"></div>
+    <div data-th-text="'Год издания: ' + ${book.publishedYear()}"></div>
+    <div data-th-text="'Уровень: ' + ${book.level()}"></div>
+    <div data-th-text="'Количество страниц: ' + ${book.numberOfPage()}"></div>
+    <div data-th-text="'Описание: ' + ${book.description()}"></div>
+    <hr/>
+
+    <a data-th-href="@{/books/{id}/edit(id=${book.id()})}">Редактировать</a>
 
     <hr/>
 
-    <a data-th-href="@{/books/{id}/edit(id=${book.getId()})}">Редактировать</a>
-
-    <hr/>
-
-    <form data-th-method="POST" data-th-action="@{/books/{id}/delete(id=${book.getId()})}">
+    <form data-th-method="POST" data-th-action="@{/books/{id}/delete(id=${book.id()})}">
         <input type="submit" value="Удалить"/>
     </form>
 </body>

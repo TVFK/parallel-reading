@@ -1,4 +1,4 @@
-package ru.taf.entities;
+package ru.taf.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

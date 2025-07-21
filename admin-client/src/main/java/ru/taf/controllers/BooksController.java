@@ -8,10 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.taf.client.BooksRestClient;
 import ru.taf.client.exception.BadRequestException;
-import ru.taf.entities.Book;
+import ru.taf.dto.Book;
+import ru.taf.dto.NewBookDTO;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,26 +23,27 @@ public class BooksController {
 
     @GetMapping("list")
     public String getListOfBooks(Model model,
-                                 @RequestParam(value = "filter", required = false) String filter){
+                                 @RequestParam(value = "filter", required = false) String filter) {
+
         List<Book> books = booksClient.findAllBooks(filter);
         model.addAttribute("books", books);
         return "books/list";
     }
 
     @GetMapping("create")
-    public String getCreatePage(Model model){
-        model.addAttribute("book", new Book());
+    public String getCreatePage(Model model) {
+        model.addAttribute("book", new NewBookDTO("", "", "", "", new ArrayList<>(), "", ""));
         return "books/new_book";
     }
 
     @PostMapping("create")
     public String create(Model model,
-                         @ModelAttribute("book") Book book,
-                         HttpServletResponse response){
+                         @ModelAttribute("book") NewBookDTO book,
+                         HttpServletResponse response) {
         try {
             Book createdBook = booksClient.createBook(book);
-            return "redirect:/books/%d".formatted(createdBook.getId());
-        } catch (BadRequestException exception){
+            return "redirect:/books/%d".formatted(createdBook.id());
+        } catch (BadRequestException exception) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             model.addAttribute("book", book);
             model.addAttribute("errors", exception.getErrors());

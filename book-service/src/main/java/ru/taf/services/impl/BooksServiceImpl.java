@@ -7,14 +7,18 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.taf.dto.BookDTO;
+import ru.taf.dto.NewBookDTO;
+import ru.taf.dto.UpdateBookDTO;
+import ru.taf.dto.mappers.BookMapper;
 import ru.taf.entities.Book;
 import ru.taf.exceptions.BookNotFoundException;
-import ru.taf.dto.mappers.BookMapper;
 import ru.taf.repositories.BooksRepository;
 import ru.taf.services.BooksService;
 import ru.taf.specifications.BookSpecifications;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -82,5 +86,39 @@ public class BooksServiceImpl implements BooksService {
                 new BookNotFoundException("book.not_found", title));
 
         return bookMapper.toDto(book);
+    }
+
+    @Override
+    @Transactional
+    public void updateBook(Integer bookId, UpdateBookDTO bookDTO) {
+        booksRepository.findById(bookId)
+                .ifPresentOrElse(book -> {
+                    book.setAuthor(bookDTO.author());
+                    book.setTitle(bookDTO.title());
+                    book.setPublishedYear(bookDTO.publisherYear());
+                    book.setDescription(bookDTO.description());
+                }, () -> {
+                    throw new BookNotFoundException("book.not_found", bookId);
+                });
+    }
+
+    @Override
+    @Transactional
+    public void deleteBook(Integer bookId) {
+        booksRepository.deleteById(bookId);
+    }
+
+    @Override
+    @Transactional
+    public BookDTO createBook(NewBookDTO newBook) {
+        Book entity = bookMapper.toEntity(newBook);
+
+        // FIXME исправить
+        if(entity.getNumberOfPage() == null || entity.getNumberOfPage() == 0){
+            entity.setNumberOfPage(1);
+        }
+
+        Book createdBook = booksRepository.save(entity);
+        return bookMapper.toDto(createdBook);
     }
 }

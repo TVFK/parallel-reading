@@ -1,8 +1,8 @@
 package ru.taf.services;
 
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import ru.taf.dto.BookDTO;
+import ru.taf.dto.NewBookDTO;
+import ru.taf.dto.UpdateBookDTO;
 import ru.taf.entities.Book;
 
 import java.util.List;
@@ -13,4 +13,8 @@ public interface BooksService {
     List<List<BookDTO>> getBooksGroupedByLevel();
     Book getBookById(Integer bookId);
     BookDTO getBookByTitle(String title);
+    void updateBook(Integer bookId, UpdateBookDTO bookDTO);
+    void deleteBook(Integer bookId);
+
+    BookDTO createBook(NewBookDTO newBook);
 }

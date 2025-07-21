@@ -1,6 +1,8 @@
 package ru.taf.client;
 
-import ru.taf.entities.Book;
+import ru.taf.dto.Book;
+import ru.taf.dto.NewBookDTO;
+import ru.taf.dto.UpdateBookDTO;
 
 import java.util.List;
 
@@ -9,9 +11,9 @@ public interface BooksRestClient {
 
     Book findBook(Integer bookId);
 
-    Book createBook(Book book);
+    Book createBook(NewBookDTO book);
 
-    void updateBook(Book book, Integer bookId);
+    void updateBook(UpdateBookDTO book, Integer bookId);
 
     void deleteBook(Integer bookId);
 }

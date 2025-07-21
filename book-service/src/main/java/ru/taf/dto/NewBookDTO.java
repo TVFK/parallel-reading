@@ -5,8 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.List;
 
-public record CreateBookDTO(
+public record NewBookDTO(
         @NotNull(message = "{books.create.errors.title_is_null")
         @Size(min = 1, max = 50, message = "{books.create.errors.title_size_is_invalid")
         @NotBlank(message = "{books.create.errors.title_is_blank")
@@ -18,10 +19,12 @@ public record CreateBookDTO(
         String author,
 
         @NotNull(message = "{books.create.errors.language_is_null}")
-        String language,
+        String level,
 
         @NotNull(message = "{books.create.errors.publisherDate_is_null}")
-        LocalDate publisherDate,
+        String publishedYear,
+
+        List<GenreDTO> genres,
 
         @NotNull(message = "{books.create.errors.description_is_null}")
         @Size(max = 500, message = "{books.create.errors.description_size_is_invalid}")

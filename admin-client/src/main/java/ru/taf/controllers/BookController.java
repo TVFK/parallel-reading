@@ -1,7 +1,6 @@
 package ru.taf.controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -9,7 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.taf.client.BooksRestClient;
 import ru.taf.client.exception.BadRequestException;
-import ru.taf.entities.Book;
+import ru.taf.dto.Book;
+import ru.taf.dto.UpdateBookDTO;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,15 +35,22 @@ public class BookController {
 
     @PostMapping("edit")
     public String edit(@PathVariable("bookId") int bookId,
-                       @ModelAttribute("book") Book updatedBook,
+                       @ModelAttribute("book") Book book,
                        HttpServletResponse response,
                        Model model){
         try {
-            booksClient.updateBook(updatedBook, bookId);
+            UpdateBookDTO updateBookDTO = new UpdateBookDTO(
+                    book.title(),
+                    book.author(),
+                    book.publishedYear(),
+                    book.level(),
+                    book.description()
+            );
+            booksClient.updateBook(updateBookDTO, bookId);
             return "redirect:/books/%d".formatted(bookId);
         } catch (BadRequestException exception) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            model.addAttribute("book", updatedBook);
+            model.addAttribute("book", book);
             model.addAttribute("errors", exception.getErrors());
             return "books/edit";
         }
