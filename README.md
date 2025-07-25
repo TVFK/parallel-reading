@@ -72,3 +72,40 @@ docker run -p 9000:9000 -p 9001:9001 \
     -v minio_data:/data \
     minio/minio server /data --console-address ":9001"
 ```
+
+## Kafka
+
+```shell
+docker network create kafka-net
+```
+
+```shell
+docker run -d --name zookeeper -p 2181:2181 apache/zookeeper:3.9.0
+```
+
+```shell
+docker run -d --name kafka \
+  -p 9092:9092 \
+  --link zookeeper:zookeeper \
+  -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
+  -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 \
+  -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT \
+  -e KAFKA_AUTO_CREATE_TOPICS_ENABLE=true \
+  apache/kafka:3.9.0
+```
+
+```shell
+docker exec kafka kafka-topics.sh --create \
+  --bootstrap-server kafka:9092 \
+  --replication-factor 1 \
+  --partitions 3 \
+  --topic book-creation-events
+```
+
+```shell
+docker exec kafka kafka-topics.sh --create \
+  --bootstrap-server kafka:9092 \
+  --replication-factor 1 \
+  --partitions 3 \
+  --topic book-processed-events
+```

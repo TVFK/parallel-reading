@@ -24,5 +24,5 @@ public class NewBookDTO {
     private Set<String> genres;
 
     private String description;
-    private String coverImageKey;
+    private String imageUrl;
 }

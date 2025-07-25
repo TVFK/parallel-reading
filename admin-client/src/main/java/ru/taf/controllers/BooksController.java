@@ -10,7 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.taf.client.BooksRestClient;
 import ru.taf.client.exception.BadRequestException;
 import ru.taf.dto.BookDTO;
+import ru.taf.dto.BookUploadEvent;
 import ru.taf.dto.NewBookDTO;
+import ru.taf.services.KafkaService;
 import ru.taf.services.MinioService;
 
 import java.util.List;
@@ -23,6 +25,8 @@ public class BooksController {
     private final BooksRestClient booksClient;
 
     private final MinioService minioService;
+
+    private final KafkaService kafkaService;
 
     @GetMapping("list")
     public String getListOfBooks(Model model,
@@ -53,8 +57,11 @@ public class BooksController {
             String originalTextKey = minioService.uploadFile(originalFile);
             String translatedTextKey = minioService.uploadFile(translatedFile);
 
+            book.setImageUrl(coverImageKey);
             BookDTO createdBook = booksClient.createBook(book);
-            createdBook.setImageUrl(coverImageKey);
+
+            BookUploadEvent bookUploadEvent = new BookUploadEvent(createdBook.getId(), originalTextKey, translatedTextKey);
+            kafkaService.sendMessage("book-processed-events", bookUploadEvent);
 
             return "redirect:/books/%d".formatted(createdBook.getId());
         } catch (BadRequestException exception) {
