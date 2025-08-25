@@ -44,7 +44,6 @@ public class BooksRestClientImpl implements BooksRestClient {
         }
     }
 
-    // TODO дохуя всего сделать...
     @Override
     public BookDTO createBook(NewBookDTO book) {
         try{

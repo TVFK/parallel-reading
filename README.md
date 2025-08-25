@@ -45,6 +45,14 @@ The environment configuration file, stores:
 
 Responsible for managing user flashcards and vocabulary tracking. Keycloak id (sub) is used to identify users.
 
+## Book Upload Service
+
+Responsible for parsing book files, creating a match between the text and the translation of the book, and sending it to the book service. Kafka is used for asynchronous communication.
+
+## Admin client
+
+Admin web client for book management
+
 ### PostgreSQL
 
 **Used for store dictionary cards and users**

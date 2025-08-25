@@ -1,0 +1,167 @@
+name: parallel-reading
+services:
+  # Infrastructure
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - './config/keycloak/import:/opt/keycloak/data/import'
+    ports:
+      - '8082:8080'
+    command: start-dev --import-realm
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - backend
+
+  kafka:
+    image: bitnami/kafka:latest
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    volumes:
+      - kafka_data:/bitnami/kafka
+
+  books-db:
+    image: postgres:16
+    container_name: books-db
+    environment:
+      POSTGRES_DB: books-db
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - books_db_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  books-service-cache:
+    image: redis:latest
+    container_name: books-service-cache
+    command: redis-server --requirepass password
+    environment:
+      REDIS_PASSWORD: password
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+  translation-service-cache:
+    image: redis:latest
+    container_name: translation-service-cache
+    command: redis-server --requirepass password
+    environment:
+      REDIS_PASSWORD: password
+    ports:
+      - "6380:6379"
+    networks:
+      - backend
+
+  dictionary-db:
+    image: postgres:16
+    container_name: dictionary-db
+    environment:
+      POSTGRES_DB: dictionary-db
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"
+    volumes:
+      - dictionary_db_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  # Services
+  book-service:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: book-service/target/book-service-0.0.1-SNAPSHOT-exec.jar
+    networks:
+      - backend
+    depends_on:
+      - books-db
+      - keycloak
+      - books-service-cache
+  book-upload-service:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: book-upload-service/target/book-upload-service-0.0.1-SNAPSHOT-exec.jar
+    networks:
+      - backend
+    depends_on:
+      - kafka
+  dictionary-service:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: dictionary-service/target/dictionary-service-0.0.1-SNAPSHOT-exec.jar
+    networks:
+      - backend
+    depends_on:
+      - dictionary-db
+      - keycloak
+  translation-service:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: translation-service/target/translation-service-0.0.1-SNAPSHOT-exec.jar
+    networks:
+      - backend
+    depends_on:
+      - translation-service-cache
+      - keycloak
+  admin-client:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: admin-client/target/admin-client-0.0.1-SNAPSHOT-exec.jar
+    networks:
+      - backend
+    depends_on:
+      - keycloak
+      - kafka
+  frontend-app:
+    restart: always
+    image:
+    networks:
+      - backend
+    depends_on:
+      - keycloak
+volumes:
+  minio_data:
+  kafka_data:
+  books_db_data:
+  dictionary_db_data:
+
+networks:
+  backend: 
+    driver: bridge
