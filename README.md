@@ -1,5 +1,10 @@
 # Parallel Reading
 
+**Architectural scheme**
+Not a very beautiful architectural scheme, I'll definitely make it more beautiful!!!
+
+![Architecture scheme](https://github.com/user-attachments/assets/4820e342-1d32-4d19-8632-5ee481d9a0c6)
+
 ## Book Service
 
 The main microservice stores data about books, book pages, chapters
