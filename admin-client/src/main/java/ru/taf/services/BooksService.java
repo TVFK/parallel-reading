@@ -26,9 +26,9 @@ public class BooksService {
             MultipartFile translatedFile
     ) {
         try {
-            String coverImageKey = minioService.uploadFile(coverImage);
-            String originalTextKey = minioService.uploadFile(originalFile);
-            String translatedTextKey = minioService.uploadFile(translatedFile);
+            String coverImageKey = minioService.uploadCover(coverImage);
+            String originalTextKey = minioService.uploadText(originalFile);
+            String translatedTextKey = minioService.uploadText(translatedFile);
 
             book.setImageUrl(coverImageKey);
             BookDTO createdBook = booksClient.createBook(book);
@@ -38,7 +38,7 @@ public class BooksService {
 
             return createdBook;
         } catch (Exception e) {
-            throw new BookCreationException("Ошибка при создании книги: " + e.getMessage(), e);
+            throw new BookCreationException("Error when creating book: " + e.getMessage(), e);
         }
     }
 }

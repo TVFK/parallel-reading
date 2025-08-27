@@ -20,16 +20,30 @@ public class MinioService implements S3Service {
 
     private final MinioClient minioClient;
 
-    @Value("${minio.bucket}")
-    private String bucketName;
+    @Value("${minio.covers-bucket}")
+    private String coversBucket;
+
+    @Value("${minio.texts-bucket}")
+    private String textsBucket;
 
     @PostConstruct
     public void init() {
-        createBucket();
+        createBucket(coversBucket);
+        createBucket(textsBucket);
     }
 
     @Override
-    public String uploadFile(MultipartFile file) {
+    public String uploadText(MultipartFile file) {
+        return uploadFile(file, textsBucket);
+    }
+
+    @Override
+    public String uploadCover(MultipartFile file) {
+        return uploadFile(file, coversBucket);
+    }
+
+
+    private String uploadFile(MultipartFile file, String bucketName) {
         if (file.isEmpty() || file.getOriginalFilename() == null) {
             throw new FileUploadException("file must have name");
         }
@@ -52,7 +66,7 @@ public class MinioService implements S3Service {
     }
 
 
-    private void createBucket() {
+    private void createBucket(String bucketName) {
         try {
             if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());

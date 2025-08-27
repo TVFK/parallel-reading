@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.taf.exceptions.AbstractNotFoundException;
-import ru.taf.exceptions.BookNotFoundException;
-import ru.taf.exceptions.PageNotFoundException;
 
 import java.util.Locale;
 

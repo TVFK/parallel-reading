@@ -34,4 +34,6 @@ minio:
   url: http://localhost:9000
   access-key: admin
   secret-key: password
-  bucket: covers
+  covers-bucket: covers
+  texts-bucket: texts
+

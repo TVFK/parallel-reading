@@ -17,7 +17,6 @@ public class SecurityConfig {
             Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/covers/**").permitAll() // TODO убрать после переноса файлов на веб-сервер
                         .requestMatchers(HttpMethod.GET).hasAuthority("SCOPE_view_books")
                         .requestMatchers(HttpMethod.POST).hasAuthority("SCOPE_edit_books")
                         .requestMatchers(HttpMethod.PATCH).hasAuthority("SCOPE_edit_books")
