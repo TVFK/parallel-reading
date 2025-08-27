@@ -49,6 +49,10 @@ Responsible for managing user flashcards and vocabulary tracking. Keycloak id (s
 
 Responsible for parsing book files, creating a match between the text and the translation of the book, and sending it to the book service. Kafka is used for asynchronous communication.
 
+## Auth Service
+
+Response for user registration, password reset etc
+
 ## Admin client
 
 Admin web client for book management
