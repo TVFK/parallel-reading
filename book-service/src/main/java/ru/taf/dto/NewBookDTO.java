@@ -9,12 +9,10 @@ import java.util.List;
 import java.util.Set;
 
 public record NewBookDTO(
-        @NotNull(message = "{books.create.errors.title_is_null")
         @Size(min = 1, max = 50, message = "{books.create.errors.title_size_is_invalid")
         @NotBlank(message = "{books.create.errors.title_is_blank")
         String title,
 
-        @NotNull(message = "{books.create.errors.author_is_null}")
         @Size(min = 1, max = 100, message = "{books.create.errors.author_size_is_invalid")
         @NotBlank(message = "{books.create.errors.author_is_blank}")
         String author,

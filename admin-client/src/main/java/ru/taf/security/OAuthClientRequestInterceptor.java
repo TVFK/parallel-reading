@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
-import ru.taf.client.exception.AuthorizationException;
+import ru.taf.exceptions.AuthorizationException;
 
 import java.io.IOException;
 
@@ -40,7 +40,7 @@ public class OAuthClientRequestInterceptor implements ClientHttpRequestIntercept
                     .build());
 
             if(authorizedClient == null){
-                throw new AuthorizationException("authorized client in null");
+                throw new AuthorizationException("authorized client is null");
             }
             request.getHeaders().setBearerAuth(authorizedClient.getAccessToken().getTokenValue());
         }

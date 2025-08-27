@@ -7,8 +7,8 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import ru.taf.client.exception.BadRequestException;
-import ru.taf.client.exception.BookNotFoundException;
+import ru.taf.exceptions.BadRequestException;
+import ru.taf.exceptions.BookNotFoundException;
 import ru.taf.dto.BookDTO;
 import ru.taf.dto.NewBookDTO;
 import ru.taf.dto.UpdateBookDTO;
@@ -61,12 +61,19 @@ public class BooksRestClientImpl implements BooksRestClient {
     }
 
     @Override
-    public void updateBook(UpdateBookDTO book, Integer bookId) {
+    public void updateBook(BookDTO book, Integer bookId) {
+        UpdateBookDTO updateBookDTO = new UpdateBookDTO(
+                book.getTitle(),
+                book.getAuthor(),
+                book.getPublishedYear(),
+                book.getLevel(),
+                book.getDescription()
+        );
         try {
             restClient.patch()
                     .uri("books/{bookId}", bookId)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(book)
+                    .body(updateBookDTO)
                     .retrieve()
                     .toBodilessEntity();
         } catch (HttpClientErrorException.BadRequest exception) {

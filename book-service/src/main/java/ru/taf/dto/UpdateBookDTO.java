@@ -20,6 +20,7 @@ public record UpdateBookDTO(
         @NotNull(message = "{books.update.errors.publisherDate_is_null}")
         String publishedYear,
 
+        @NotNull(message = "level can't be null")
         String level,
 
         @NotNull(message = "{books.update.errors.description_is_null}")

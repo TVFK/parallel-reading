@@ -7,9 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.taf.client.BooksRestClient;
-import ru.taf.client.exception.BadRequestException;
+import ru.taf.exceptions.BadRequestException;
 import ru.taf.dto.BookDTO;
-import ru.taf.dto.UpdateBookDTO;
 
 @Controller
 @RequiredArgsConstructor
@@ -39,14 +38,7 @@ public class BookController {
                        HttpServletResponse response,
                        Model model){
         try {
-            UpdateBookDTO updateBookDTO = new UpdateBookDTO(
-                    book.getTitle(),
-                    book.getAuthor(),
-                    book.getPublishedYear(),
-                    book.getLevel(),
-                    book.getDescription()
-            );
-            booksClient.updateBook(updateBookDTO, bookId);
+            booksClient.updateBook(book, bookId);
             return "redirect:/books/%d".formatted(bookId);
         } catch (BadRequestException exception) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());

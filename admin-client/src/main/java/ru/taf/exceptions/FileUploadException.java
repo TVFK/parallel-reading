@@ -1,4 +1,4 @@
-package ru.taf.client.exception;
+package ru.taf.exceptions;
 
 public class FileUploadException extends RuntimeException{
     public FileUploadException(String message) {

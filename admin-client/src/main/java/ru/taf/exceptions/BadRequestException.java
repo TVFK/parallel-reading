@@ -1,4 +1,4 @@
-package ru.taf.client.exception;
+package ru.taf.exceptions;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

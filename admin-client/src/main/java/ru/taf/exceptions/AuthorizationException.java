@@ -1,4 +1,4 @@
-package ru.taf.client.exception;
+package ru.taf.exceptions;
 
 public class AuthorizationException extends RuntimeException{
     public AuthorizationException(String message) {

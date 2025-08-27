@@ -1,6 +1,7 @@
 package ru.taf.controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -8,12 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.taf.client.BooksRestClient;
-import ru.taf.client.exception.BadRequestException;
+import ru.taf.exceptions.BadRequestException;
 import ru.taf.dto.BookDTO;
-import ru.taf.dto.BookUploadEvent;
 import ru.taf.dto.NewBookDTO;
-import ru.taf.services.KafkaService;
-import ru.taf.services.MinioService;
+import ru.taf.services.BooksService;
 
 import java.util.List;
 
@@ -24,9 +23,7 @@ public class BooksController {
 
     private final BooksRestClient booksClient;
 
-    private final MinioService minioService;
-
-    private final KafkaService kafkaService;
+    private final BooksService booksService;
 
     @GetMapping("list")
     public String getListOfBooks(Model model,
@@ -44,36 +41,13 @@ public class BooksController {
     }
 
     @PostMapping("create")
-    public String create(
-            Model model,
-            @ModelAttribute("book") NewBookDTO book,
+    public String createBook(
+            @ModelAttribute("book") @Valid NewBookDTO book,
             @RequestParam("coverImage") MultipartFile coverImage,
             @RequestParam("originalFile") MultipartFile originalFile,
-            @RequestParam("translatedFile") MultipartFile translatedFile,
-            HttpServletResponse response
+            @RequestParam("translatedFile") MultipartFile translatedFile
     ) {
-        try {
-            String coverImageKey = minioService.uploadFile(coverImage);
-            String originalTextKey = minioService.uploadFile(originalFile);
-            String translatedTextKey = minioService.uploadFile(translatedFile);
-
-            book.setImageUrl(coverImageKey);
-            BookDTO createdBook = booksClient.createBook(book);
-
-            BookUploadEvent bookUploadEvent = new BookUploadEvent(createdBook.getId(), originalTextKey, translatedTextKey);
-            kafkaService.sendMessage("book-processed-events", bookUploadEvent);
-
-            return "redirect:/books/%d".formatted(createdBook.getId());
-        } catch (BadRequestException exception) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            model.addAttribute("book", book);
-            model.addAttribute("errors", exception.getErrors());
-            return "books/new_book";
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            model.addAttribute("book", book);
-            model.addAttribute("error", "Ошибка: " + e.getMessage());
-            return "books/new_book";
-        }
+        BookDTO createdBook = booksService.createBook(book, coverImage, originalFile, translatedFile);
+        return "redirect:/books/%d".formatted(createdBook.getId());
     }
 }
