@@ -1,7 +1,7 @@
 package ru.taf.dto;
 
 public record BookUploadEvent(
-        int id,
+        int bookId,
         String originalTextKey,
         String translatedTextKey
 ) {

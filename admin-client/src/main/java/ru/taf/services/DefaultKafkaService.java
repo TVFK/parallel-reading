@@ -15,7 +15,6 @@ public class DefaultKafkaService implements KafkaService {
 
     private final KafkaTemplate<String, BookUploadEvent> kafkaTemplate;
     @Override
-    @SneakyThrows
     public void sendMessage(String topic, BookUploadEvent event) {
         kafkaTemplate.send(topic, event);
     }

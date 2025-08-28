@@ -9,7 +9,6 @@ import java.util.Properties;
 
 @Configuration
 public class NLPConfig {
-
     @Bean
     public StanfordCoreNLP stanfordCoreNLP() {
         Properties props = new Properties();

@@ -6,5 +6,5 @@ import java.io.InputStream;
 
 public interface S3Service {
 
-    InputStream getFile(String fileName);
+    String getFile(String fileName);
 }
