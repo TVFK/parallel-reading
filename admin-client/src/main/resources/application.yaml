@@ -30,10 +30,10 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 minio:
   url: http://localhost:9000
   access-key: admin
   secret-key: password
   covers-bucket: covers
   texts-bucket: texts
-

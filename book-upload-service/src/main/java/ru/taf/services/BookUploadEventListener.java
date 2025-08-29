@@ -17,7 +17,7 @@ public class BookUploadEventListener {
 
     private final BookParserService bookParserService;
 
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, BookCreationEvent> kafkaTemplate;
 
     @KafkaListener(
             topics = "book-processed-events",
@@ -29,7 +29,7 @@ public class BookUploadEventListener {
             List<Chapter> chapters = bookParserService.parseBook(event);
             sendMessage(event.bookId(), chapters);
         } catch (Exception e) {
-            throw new RuntimeException("Не вышло ничего :(");
+            throw new RuntimeException("ОШИБКА ПРИ ПАРСИНГЕ ТЕКСТА КНИГИ: " + e.getMessage(), e);
         }
     }
 

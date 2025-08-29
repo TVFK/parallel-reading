@@ -29,7 +29,7 @@ public class BookParserService {
         List<ChapterContent> translatedChapters = splitIntoChapters(translatedText);
 
         if (originalChapters.size() != translatedChapters.size()) {
-            throw new RuntimeException("Количество глав в оригинале и переводе не совпадает");
+            throw new RuntimeException("Количество глав в оригинале и переводе не совпадает" + originalChapters.size() + " ПРОТИВ " + translatedChapters.size());
         }
 
         List<Chapter> chapters = new ArrayList<>();
@@ -56,30 +56,38 @@ public class BookParserService {
 
     private List<ChapterContent> splitIntoChapters(String text) {
         List<ChapterContent> chapters = new ArrayList<>();
-        Pattern pattern = Pattern.compile("(?i)^CHAPTER\\s+[IVXLCDM0-9]+.*$", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile("(?im)^(CHAPTER|ГЛАВА)\\s+[IVXLCDM0-9]+.*$");
         Matcher matcher = pattern.matcher(text);
 
-        int start = 0;
+        int previousEnd = 0;
         while (matcher.find()) {
-            if (start != 0) {
-                String content = text.substring(start, matcher.start()).trim();
-                chapters.add(new ChapterContent(extractChapterTitle(text, start), content));
+            if (matcher.start() > previousEnd) {
+                String content = text.substring(previousEnd, matcher.start()).trim();
+                String title = extractChapterTitle(text, previousEnd);
+                chapters.add(new ChapterContent(title, content));
             }
-            start = matcher.start();
+            previousEnd = matcher.end();
         }
 
-        if (start < text.length()) {
-            String content = text.substring(start).trim();
-            chapters.add(new ChapterContent(extractChapterTitle(text, start), content));
+        // Добавляем последнюю главу
+        if (previousEnd < text.length()) {
+            String content = text.substring(previousEnd).trim();
+            String title = extractChapterTitle(text, previousEnd);
+            chapters.add(new ChapterContent(title, content));
         }
 
         return chapters;
     }
 
-    private String extractChapterTitle(String text, int start) {
-        int end = text.indexOf("\n", start);
-        if (end == -1) end = text.length();
-        return text.substring(start, end).trim();
+    private String extractChapterTitle(String text, int position) {
+        int lineStart = text.lastIndexOf("\n", position);
+        if (lineStart == -1) lineStart = 0;
+        else lineStart++;
+
+        int lineEnd = text.indexOf("\n", position);
+        if (lineEnd == -1) lineEnd = text.length();
+
+        return text.substring(lineStart, lineEnd).trim();
     }
 
     private List<Page> createPages(List<Sentence> sentences) {

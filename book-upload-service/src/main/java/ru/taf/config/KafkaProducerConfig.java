@@ -9,6 +9,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import ru.taf.dto.BookCreationEvent;
 import ru.taf.dto.BookUploadEvent;
 
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public class KafkaProducerConfig {
     private String bootstrapAddress;
 
     @Bean
-    public ProducerFactory<String, BookUploadEvent> producerFactory() {
+    public ProducerFactory<String, BookCreationEvent> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -32,11 +33,15 @@ public class KafkaProducerConfig {
         configProps.put(
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 JsonSerializer.class);
+
+        configProps.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 2097152);
+        configProps.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "gzip");
+        configProps.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
     @Bean
-    public KafkaTemplate<String, BookUploadEvent> kafkaTemplate() {
+    public KafkaTemplate<String, BookCreationEvent> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

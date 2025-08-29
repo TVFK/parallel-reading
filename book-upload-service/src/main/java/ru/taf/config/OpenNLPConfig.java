@@ -11,17 +11,34 @@ import java.io.InputStream;
 
 @Configuration
 public class OpenNLPConfig {
+
     @Bean(name = "englishDetector")
     public SentenceDetectorME englishSentenceDetector() throws IOException {
-        InputStream modelStream = new ClassPathResource("models/en-sent.bin").getInputStream();
-        SentenceModel model = new SentenceModel(modelStream);
-        return new SentenceDetectorME(model);
+        InputStream modelStream = getClass().getClassLoader()
+                .getResourceAsStream("opennlp-en-ud-ewt-sentence-1.3-2.5.4.bin");
+
+        if (modelStream == null) {
+            throw new IllegalStateException("English model not found. Check if dependency is correctly added.");
+        }
+
+        try (modelStream) {
+            SentenceModel model = new SentenceModel(modelStream);
+            return new SentenceDetectorME(model);
+        }
     }
 
     @Bean(name = "russianDetector")
     public SentenceDetectorME russianSentenceDetector() throws IOException {
-        InputStream modelStream = new ClassPathResource("models/ru-sent.bin").getInputStream();
-        SentenceModel model = new SentenceModel(modelStream);
-        return new SentenceDetectorME(model);
+        InputStream modelStream = getClass().getClassLoader()
+                .getResourceAsStream("opennlp-ru-ud-gsd-sentence-1.3-2.5.4.bin");
+
+        if (modelStream == null) {
+            throw new IllegalStateException("Russian model not found. Check if dependency is correctly added.");
+        }
+
+        try (modelStream) {
+            SentenceModel model = new SentenceModel(modelStream);
+            return new SentenceDetectorME(model);
+        }
     }
 }

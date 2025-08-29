@@ -17,8 +17,11 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      compression-type: gzip
+      properties:
+        max.request.size: 2097152
 minio:
   url: http://localhost:9000
   access-key: admin
   secret-key: password
-  bucket: covers
+  bucket: texts
