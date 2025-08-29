@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.taf.dto.BookCreationEvent;
+import ru.taf.dto.BookFillingEvent;
 import ru.taf.dto.BookUploadEvent;
 import ru.taf.dto.Chapter;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +16,7 @@ public class BookUploadEventListener {
 
     private final BookParserService bookParserService;
 
-    private final KafkaTemplate<String, BookCreationEvent> kafkaTemplate;
+    private final KafkaTemplate<String, BookFillingEvent> kafkaTemplate;
 
     @KafkaListener(
             topics = "book-processed-events",
@@ -34,7 +33,7 @@ public class BookUploadEventListener {
     }
 
     public void sendMessage(int bookId, List<Chapter> chapters) {
-        BookCreationEvent creationEvent = new BookCreationEvent(bookId, chapters);
+        BookFillingEvent creationEvent = new BookFillingEvent(bookId, chapters);
         kafkaTemplate.send("book-creation-events", creationEvent);
     }
 }

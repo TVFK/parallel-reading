@@ -9,8 +9,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import ru.taf.dto.BookCreationEvent;
-import ru.taf.dto.BookUploadEvent;
+import ru.taf.dto.BookFillingEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class KafkaProducerConfig {
     private String bootstrapAddress;
 
     @Bean
-    public ProducerFactory<String, BookCreationEvent> producerFactory() {
+    public ProducerFactory<String, BookFillingEvent> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -41,7 +40,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, BookCreationEvent> kafkaTemplate() {
+    public KafkaTemplate<String, BookFillingEvent> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

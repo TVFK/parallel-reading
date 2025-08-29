@@ -8,4 +8,6 @@ import java.util.List;
 public interface ChaptersService {
 
     List<ChapterDTO> getAllChapterByBookId(Integer bookId);
+
+    void save(int bookId, Chapter chapter);
 }
