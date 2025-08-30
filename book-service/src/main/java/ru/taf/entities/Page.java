@@ -31,6 +31,6 @@ public class Page {
     @Column(name = "page_number")
     private int pageNumber;
 
-    @OneToMany(mappedBy = "page")
+    @OneToMany(mappedBy = "page", cascade = CascadeType.ALL)
     private List<Sentence> sentences;
 }

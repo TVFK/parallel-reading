@@ -27,7 +27,6 @@ public class BookRestController {
         return booksService.getBookById(bookId);
     }
 
-    // TODO защитить, добавить декоратор
     @PatchMapping
     public ResponseEntity<?> updateBook(
             @PathVariable("bookId") Integer bookId,

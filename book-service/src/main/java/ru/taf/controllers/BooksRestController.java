@@ -2,6 +2,7 @@ package ru.taf.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -38,8 +39,7 @@ public class BooksRestController {
     @PostMapping
     public ResponseEntity<?> createDictionaryCard(
             @Valid @RequestBody NewBookDTO newBook,
-            BindingResult bindingResult,
-            UriComponentsBuilder uriComponentsBuilder
+            BindingResult bindingResult // FIXME без него
     ) throws BindException {
 
         if (bindingResult.hasErrors()) {
@@ -47,11 +47,11 @@ public class BooksRestController {
         }
 
         BookDTO createdBook = booksService.createBook(newBook);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
+    }
 
-        // FIXME поменять путь
-        return ResponseEntity.created(
-                uriComponentsBuilder.path("/books")
-                        .build().toUri()
-        ).body(createdBook);
+    @GetMapping("/by-title/{bookTitle}")
+    public ResponseEntity<BookDTO> getBookByTitle(@PathVariable("bookTitle") String bookTitle){
+        return ResponseEntity.ok(booksService.getBookByTitle(bookTitle));
     }
 }

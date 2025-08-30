@@ -18,7 +18,7 @@ public class BookFillingEventListener {
     private final ChaptersService chaptersService;
 
     @KafkaListener(
-            topics = "book-processed-events",
+            topics = "book-creation-events",
             groupId = "${spring.kafka.consumer.group-id}",
             containerFactory = "kafkaListenerContainerFactory"
     )

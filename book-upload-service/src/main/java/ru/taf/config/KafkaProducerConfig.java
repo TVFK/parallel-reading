@@ -36,6 +36,7 @@ public class KafkaProducerConfig {
         configProps.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 2097152);
         configProps.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "gzip");
         configProps.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
+        configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 

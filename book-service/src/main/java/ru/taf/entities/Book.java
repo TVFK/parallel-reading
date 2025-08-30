@@ -51,6 +51,6 @@ public class Book {
     )
     private Set<Genre> genres = new HashSet<>();
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Chapter> chapters;
 }

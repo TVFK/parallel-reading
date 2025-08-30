@@ -35,6 +35,7 @@ public class ChaptersServiceImpl implements ChaptersService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public void save(int bookId, Chapter chapter) {
         Book book = booksRepository.findById(bookId).orElseThrow(() ->

@@ -36,7 +36,7 @@ public class KafkaConsumerConfig {
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
                 JsonDeserializer.class);
 
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "ru.taf.dto.BookUploadEvent");
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "ru.taf.dto.kafka.BookFillingEvent");
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 
         return new DefaultKafkaConsumerFactory<>(props);

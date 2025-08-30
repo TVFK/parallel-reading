@@ -26,17 +26,17 @@ public class BooksService {
             MultipartFile translatedFile
     ) {
         try {
-//            String coverImageKey = minioService.uploadCover(coverImage);
+            String coverImageKey = minioService.uploadCover(coverImage);
             String originalTextKey = minioService.uploadText(originalFile);
             String translatedTextKey = minioService.uploadText(translatedFile);
 
-//            book.setImageUrl(coverImageKey);
-//            BookDTO createdBook = booksClient.createBook(book);
+            book.setImageUrl(coverImageKey);
+            BookDTO createdBook = booksClient.createBook(book);
 
-            BookUploadEvent bookUploadEvent = new BookUploadEvent(1, originalTextKey, translatedTextKey);
+            BookUploadEvent bookUploadEvent = new BookUploadEvent(createdBook.getId(), originalTextKey, translatedTextKey);
             kafkaService.sendMessage("book-processed-events", bookUploadEvent);
 
-            return new BookDTO();
+            return createdBook;
         } catch (Exception e) {
             throw new BookCreationException("Error when creating book: " + e.getMessage(), e);
         }

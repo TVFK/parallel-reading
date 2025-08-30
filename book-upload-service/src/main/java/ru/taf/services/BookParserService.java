@@ -33,6 +33,7 @@ public class BookParserService {
         }
 
         List<Chapter> chapters = new ArrayList<>();
+        int totalPages = 0;
         for (int i = 0; i < originalChapters.size(); i++) {
             ChapterContent originalChapter = originalChapters.get(i);
             ChapterContent translatedChapter = translatedChapters.get(i);
@@ -47,7 +48,8 @@ public class BookParserService {
                 sentences.add(new Sentence(j, originalSentences[j], translatedSentences[j]));
             }
 
-            List<Page> pages = createPages(sentences);
+            List<Page> pages = createPages(sentences, totalPages + 1);
+            totalPages += pages.size();
             chapters.add(new Chapter(originalChapter.title(), i + 1, pages));
         }
 
@@ -90,7 +92,7 @@ public class BookParserService {
         return text.substring(lineStart, lineEnd).trim();
     }
 
-    private List<Page> createPages(List<Sentence> sentences) {
+    private List<Page> createPages(List<Sentence> sentences, int startPageNumber) {
         List<Page> pages = new ArrayList<>();
         int pageSize = 10;
 
@@ -104,7 +106,7 @@ public class BookParserService {
                 pageSentencesWithIndex.add(new Sentence(j, original.originalText(), original.translatedText()));
             }
 
-            pages.add(new Page(pages.size() + 1, pageSentencesWithIndex));
+            pages.add(new Page(startPageNumber + pages.size(), pageSentencesWithIndex));
         }
 
         return pages;
