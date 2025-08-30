@@ -1,0 +1,9 @@
+FROM node:20-alpine as frontend-builder
+RUN apk add --no-cache git
+WORKDIR /app
+RUN git clone https://github.com/TVFK/parallel-reading-frontend . \
+    && npm ci && npm run build
+
+FROM nginx:alpine
+COPY --from=frontend-builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf

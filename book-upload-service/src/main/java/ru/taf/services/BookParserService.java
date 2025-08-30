@@ -94,7 +94,7 @@ public class BookParserService {
 
     private List<Page> createPages(List<Sentence> sentences, int startPageNumber) {
         List<Page> pages = new ArrayList<>();
-        int pageSize = 10;
+        int pageSize = 30;
 
         for (int i = 0; i < sentences.size(); i += pageSize) {
             int end = Math.min(sentences.size(), i + pageSize);

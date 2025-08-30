@@ -1,7 +1,7 @@
 name: parallel-reading
 services:
   # Infrastructure
-  keycloak:
+  bks-keycloak:
     image: quay.io/keycloak/keycloak:26.2
     environment:
       KEYCLOAK_ADMIN: admin
@@ -11,8 +11,10 @@ services:
     ports:
       - '8082:8080'
     command: start-dev --import-realm
+    networks:
+      - boolkus-net
 
-  minio:
+  bks-minio:
     image: minio/minio
     container_name: minio
     ports:
@@ -25,7 +27,7 @@ services:
       - minio_data:/data
     command: server /data --console-address ":9001"
     networks:
-      - backend
+      - boolkus-net
 
   kafka:
     image: bitnami/kafka:latest
@@ -42,8 +44,20 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
     volumes:
       - kafka_data:/bitnami/kafka
+    networks:
+      - boolkus-net
+  nginx:
+    build:
+      context: ./config/nginx
+    ports:
+      - "80:80"
+    networks:
+      - boolkus-net
+    depends_on:
+      - bks-minio
+      - bks-keycloak
 
-  books-db:
+  bks-books-db:
     image: postgres:16
     container_name: books-db
     environment:
@@ -55,7 +69,7 @@ services:
     volumes:
       - books_db_data:/var/lib/postgresql/data
     networks:
-      - backend
+      - boolkus-net
 
   books-service-cache:
     image: redis:latest
@@ -66,7 +80,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - backend
+      - boolkus-net
 
   translation-service-cache:
     image: redis:latest
@@ -77,9 +91,9 @@ services:
     ports:
       - "6380:6379"
     networks:
-      - backend
+      - boolkus-net
 
-  dictionary-db:
+  bks-dictionary-db:
     image: postgres:16
     container_name: dictionary-db
     environment:
@@ -91,7 +105,7 @@ services:
     volumes:
       - dictionary_db_data:/var/lib/postgresql/data
     networks:
-      - backend
+      - boolkus-net
 
   # Services
   book-service:
@@ -100,10 +114,10 @@ services:
       dockerfile: Dockerfile
       context: ./book-service
     networks:
-      - backend
+      - boolkus-net
     depends_on:
-      - books-db
-      - keycloak
+      - bks-books-db
+      - bks-keycloak
       - books-service-cache
 
   book-upload-service:
@@ -112,9 +126,10 @@ services:
       dockerfile: Dockerfile
       context: ./book-upload-service
     networks:
-      - backend
+      - boolkus-net
     depends_on:
       - kafka
+      - bks-minio
 
   dictionary-service:
     restart: always
@@ -122,10 +137,10 @@ services:
       dockerfile: Dockerfile
       context: ./dictionary-service
     networks:
-      - backend
+      - boolkus-net
     depends_on:
-      - dictionary-db
-      - keycloak
+      - bks-dictionary-db
+      - bks-keycloak
 
   translation-service:
     restart: always
@@ -133,10 +148,10 @@ services:
       dockerfile: Dockerfile
       context: ./translation-service
     networks:
-      - backend
+      - boolkus-net
     depends_on:
       - translation-service-cache
-      - keycloak
+      - bks-keycloak
 
   admin-client:
     restart: always
@@ -144,31 +159,21 @@ services:
       dockerfile: Dockerfile
       context: ./admin-client
     networks:
-      - backend
+      - boolkus-net
     depends_on:
-      - keycloak
+      - bks-keycloak
+      - bks-minio
       - kafka
+
   auth-service:
     restart: always
     build:
       dockerfile: Dockerfile
       context: ./auth-service
     networks:
-      - backend
+      - boolkus-net
     depends_on:
-      - keycloak
-
-  # Frontend service
-  frontend-app:
-    restart: always
-    build:
-      context: https://github.com/TVFK/parallel-reading-frontend
-      dockerfile: Dockerfile
-    networks:
-      - backend
-    depends_on:
-      - keycloak
-      - minio
+      - bks-keycloak
 
 volumes:
   minio_data:
@@ -177,5 +182,5 @@ volumes:
   dictionary_db_data:
 
 networks:
-  backend: 
+  boolkus-net: 
     driver: bridge
