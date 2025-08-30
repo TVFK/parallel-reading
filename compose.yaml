@@ -98,64 +98,78 @@ services:
     restart: always
     build:
       dockerfile: Dockerfile
-      args:
-        JAR_FILE: book-service/target/book-service-0.0.1-SNAPSHOT-exec.jar
+      context: ./book-service
     networks:
       - backend
     depends_on:
       - books-db
       - keycloak
       - books-service-cache
+
   book-upload-service:
     restart: always
     build:
       dockerfile: Dockerfile
-      args:
-        JAR_FILE: book-upload-service/target/book-upload-service-0.0.1-SNAPSHOT-exec.jar
+      context: ./book-upload-service
     networks:
       - backend
     depends_on:
       - kafka
+
   dictionary-service:
     restart: always
     build:
       dockerfile: Dockerfile
-      args:
-        JAR_FILE: dictionary-service/target/dictionary-service-0.0.1-SNAPSHOT-exec.jar
+      context: ./dictionary-service
     networks:
       - backend
     depends_on:
       - dictionary-db
       - keycloak
+
   translation-service:
     restart: always
     build:
       dockerfile: Dockerfile
-      args:
-        JAR_FILE: translation-service/target/translation-service-0.0.1-SNAPSHOT-exec.jar
+      context: ./translation-service
     networks:
       - backend
     depends_on:
       - translation-service-cache
       - keycloak
+
   admin-client:
     restart: always
     build:
       dockerfile: Dockerfile
-      args:
-        JAR_FILE: admin-client/target/admin-client-0.0.1-SNAPSHOT-exec.jar
+      context: ./admin-client
     networks:
       - backend
     depends_on:
       - keycloak
       - kafka
-  frontend-app:
+  auth-service:
     restart: always
-    image:
+    build:
+      dockerfile: Dockerfile
+      context: ./auth-service
     networks:
       - backend
     depends_on:
       - keycloak
+
+  # Frontend service
+  frontend-app:
+    restart: always
+    build:
+      context: https://github.com/TVFK/parallel-reading-frontend
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    depends_on:
+      - keycloak
+      - minio
+
 volumes:
   minio_data:
   kafka_data:

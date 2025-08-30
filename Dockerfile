@@ -1,9 +1,8 @@
 FROM eclipse-temurin:21.0.2_13-jdk-jammy as build
 
-ARG JAR_FILE
 WORKDIR /build
 
-ADD $JAR_FILE application.jar
+COPY target/*.jar application.jar
 RUN java -Djarmode=layertools -jar application.jar extract --destination extracted
 
 FROM eclipse-temurin:21.0.2_13-jre-jammy
