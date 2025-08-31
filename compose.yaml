@@ -3,6 +3,7 @@ services:
   # Infrastructure
   bks-keycloak:
     image: quay.io/keycloak/keycloak:26.2
+    container_name: bks-keycloak
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -16,7 +17,7 @@ services:
 
   bks-minio:
     image: minio/minio
-    container_name: minio
+    container_name: bks-minio
     ports:
       - '9000:9000'
       - '9001:9001'
@@ -31,6 +32,7 @@ services:
 
   kafka:
     image: bitnami/kafka:latest
+    container_name: kafka
     ports:
       - "9092:9092"
       - "9093:9093"
@@ -38,7 +40,7 @@ services:
       - KAFKA_CFG_NODE_ID=0
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 # исправить на kafka
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
@@ -46,9 +48,12 @@ services:
       - kafka_data:/bitnami/kafka
     networks:
       - boolkus-net
+
   nginx:
+    container_name: nginx
     build:
       context: ./config/nginx
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     networks:
@@ -59,7 +64,7 @@ services:
 
   bks-books-db:
     image: postgres:16
-    container_name: books-db
+    container_name: bks-books-db
     environment:
       POSTGRES_DB: books-db
       POSTGRES_USER: username
@@ -95,7 +100,7 @@ services:
 
   bks-dictionary-db:
     image: postgres:16
-    container_name: dictionary-db
+    container_name: bks-dictionary-db
     environment:
       POSTGRES_DB: dictionary-db
       POSTGRES_USER: username
@@ -109,10 +114,11 @@ services:
 
   # Services
   book-service:
-    restart: always
+    restart: on-failure
     build:
       dockerfile: Dockerfile
-      context: ./book-service
+      args:
+        JAR_FILE: book-service/target/*-exec.jar
     networks:
       - boolkus-net
     depends_on:
@@ -121,10 +127,11 @@ services:
       - books-service-cache
 
   book-upload-service:
-    restart: always
+    restart: on-failure
     build:
       dockerfile: Dockerfile
-      context: ./book-upload-service
+      args:
+        JAR_FILE: book-upload-service/target/*-exec.jar
     networks:
       - boolkus-net
     depends_on:
@@ -132,10 +139,11 @@ services:
       - bks-minio
 
   dictionary-service:
-    restart: always
+    restart: on-failure
     build:
       dockerfile: Dockerfile
-      context: ./dictionary-service
+      args:
+        JAR_FILE: dictionary-service/target/*-exec.jar
     networks:
       - boolkus-net
     depends_on:
@@ -143,10 +151,11 @@ services:
       - bks-keycloak
 
   translation-service:
-    restart: always
+    restart: on-failure
     build:
       dockerfile: Dockerfile
-      context: ./translation-service
+      args:
+        JAR_FILE: translation-service/target/*-exec.jar
     networks:
       - boolkus-net
     depends_on:
@@ -154,10 +163,11 @@ services:
       - bks-keycloak
 
   admin-client:
-    restart: always
+    restart: on-failure
     build:
       dockerfile: Dockerfile
-      context: ./admin-client
+      args:
+        JAR_FILE: admin-client/target/*-exec.jar
     networks:
       - boolkus-net
     depends_on:
@@ -166,10 +176,11 @@ services:
       - kafka
 
   auth-service:
-    restart: always
+    restart: on-failure
     build:
       dockerfile: Dockerfile
-      context: ./auth-service
+      args:
+        JAR_FILE: auth-service/target/*-exec.jar
     networks:
       - boolkus-net
     depends_on:

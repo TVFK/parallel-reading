@@ -1,4 +1,4 @@
-FROM node:20-alpine as frontend-builder
+FROM node:20-alpine AS frontend-builder
 RUN apk add --no-cache git
 WORKDIR /app
 RUN git clone https://github.com/TVFK/parallel-reading-frontend . \
