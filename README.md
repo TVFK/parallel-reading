@@ -1,12 +1,12 @@
 # Parallel Reading
 
+A platform for parallel reading of books in foreign languages with an integrated dictionary and flashcard system
+
 ## Table of Contents
 - [Architecture](#architecture)
     - [Services](#services)
     - [Infrastructure](#infrastructure)
 - [Quick Start using Docker Compose](#quick-start-using-docker-compose)
-
-A platform for parallel reading of books in foreign languages with an integrated dictionary and flashcard system
 
 ## Architecture
 
@@ -20,19 +20,19 @@ The system consists of the following microservices:
 
 1) **Book Service** - manages books, chapters, and pages
 2) **Translation Service** - translates words via the  [Yandex Dictionary API](https://yandex.ru/dev/dictionary/). Using [StanfordNLP](https://nlp.stanford.edu/) for lemmatization
-3) **Dictionary Service** - manages user flashcards and vocabulary, implements the SuperMemo 2 algorithm
+3) **Dictionary Service** - manages user flashcards and vocabulary, implements the SuperMemo 2 algorithm for interval repetition
 4) **Book Upload Service** - parses book texts using [Apache OpenNLP](https://opennlp.apache.org/)
 5) **Auth Service** - user registration, password reset, etc
 6) **Admin Client** - web interface for administrators
 
 **Frontend app** (Vue.js 3, Typescript, Vite, TailWind): https://github.com/TVFK/parallel-reading-frontend
 
-### Infrastructure 
+### Infrastructure
 
 1) **PostgreSQL** - main data storage
 2) **Redis** - caching frequently requested data
 3) **Kafka** - asynchronous communication
-4) **Minio** - stores book covers and texts
+4) **MinIO** - stores book covers and texts
 5) **Keycloak** - OAuth 2.0/OIDC authentication
 6) **Nginx** - reverse proxy and static content distribution
 
