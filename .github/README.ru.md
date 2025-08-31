@@ -1,3 +1,5 @@
+[![en](https://img.shields.io/badge/lang-en-red.svg)](../README.md)
+[![ru](https://img.shields.io/badge/lang-ru-green.svg)](README.ru.md)
 # Parallel Reading
 
 ## Содержание
@@ -12,7 +14,7 @@
 
 Не очень красивая архитектурная схема, но я обязательно сделаю её красивее!!!
 
-![Architecture scheme](https://github.com/user-attachments/assets/4820e342-1d32-4d19-8632-5ee481d9a0c6)
+![Architecture scheme](https://github.com/user-attachments/assets/98afd7c0-d0e9-4588-88cf-d0a968c6b844)
 
 ### Сервисы
 
