@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/read")
+@RequestMapping("/reader")
 public class ReaderRestController {
 
     private final PagesService pagesService;

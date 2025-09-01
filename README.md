@@ -1,5 +1,5 @@
 [![en](https://img.shields.io/badge/lang-en-red.svg)](README.md)
-[![ru](https://img.shields.io/badge/lang-ru-green.svg)](.github/README.ru.md)
+[![ru](https://img.shields.io/badge/lang-ru-green.svg)](README.ru.md)
 # Parallel Reading
 
 A platform for parallel reading of books in foreign languages with an integrated dictionary and flashcard system
@@ -14,7 +14,7 @@ A platform for parallel reading of books in foreign languages with an integrated
 
 Not a very beautiful architectural scheme, I'll definitely make it more beautiful!!!
 
-![Architecture scheme](https://github.com/user-attachments/assets/98afd7c0-d0e9-4588-88cf-d0a968c6b844)
+![Architecture scheme](https://github.com/user-attachments/assets/f1fd5b71-e1a4-4773-8186-64231b27cbe1)
 
 ### Services
 
@@ -46,10 +46,16 @@ The system consists of the following microservices:
 git clone https://github.com/TVFK/parallel-reading-frontend.git
 ```
 
-2. **Start all services**
+2. project collection
 
 ```shell
-docker-compose up -d --build
+mvn clean package
+```
+
+3**Start all services**
+
+```shell
+docker compose up -d --build
 ```
 The application will be available at: http://localhost
 

@@ -632,7 +632,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "drHE0eBoRAENaroK59E993VqfSp9pham",
       "redirectUris": [
         "http://localhost:8083/*"
       ],
@@ -897,9 +897,9 @@
       "clientId": "vue-client",
       "name": "Frontend",
       "description": "Frontend application",
-      "rootUrl": "http://localhost:5173",
+      "rootUrl": "http://localhost",
       "adminUrl": "",
-      "baseUrl": "http://localhost:5173",
+      "baseUrl": "http://localhost",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
@@ -908,7 +908,7 @@
         "/*"
       ],
       "webOrigins": [
-        "http://localhost:5173"
+        "http://localhost"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -927,7 +927,7 @@
         "client.introspection.response.allow.jwt.claim.enabled": "false",
         "standard.token.exchange.enabled": "false",
         "frontchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "http://localhost:5173",
+        "post.logout.redirect.uris": "http://localhost/logout",
         "oauth2.device.authorization.grant.enabled": "false",
         "backchannel.logout.revoke.offline.tokens": "false",
         "use.refresh.tokens": "true",
