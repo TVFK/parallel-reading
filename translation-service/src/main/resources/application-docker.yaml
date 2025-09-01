@@ -1,0 +1,23 @@
+server:
+  port: 8081
+yandex:
+  dictionary:
+    api:
+      uri: https://dictionary.yandex.net/api/v1
+      key: ${YANDEX_DICT_API_KEY}
+      lang: en-ru
+spring:
+  cache:
+    type: redis
+    redis:
+      time-to-live: 86400000
+  data:
+    redis:
+      host: translation-service-cache
+      port: 6379
+      password: password
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://bks-keycloak:8080/realms/boolkus

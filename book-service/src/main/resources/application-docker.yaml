@@ -1,0 +1,33 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: books-service
+  datasource:
+    url: jdbc:postgresql://bks-books-db:5432/books-db
+    username: username
+    password: password
+  cache:
+    type: redis
+    redis:
+      time-to-live: 86400000
+  data:
+    redis:
+      host: books-service-cache
+      port: 6379
+      password: password
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://bks-keycloak:8080/realms/boolkus
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: ${spring.application.name}-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: "*"

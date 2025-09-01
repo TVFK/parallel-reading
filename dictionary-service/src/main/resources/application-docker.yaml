@@ -1,0 +1,15 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: dictionary-service
+  datasource:
+    url: jdbc:postgresql://bks-dictionary-bd:5432/dictionary-db
+    username: username
+    password: password
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://bks-keycloak:8080/realms/boolkus

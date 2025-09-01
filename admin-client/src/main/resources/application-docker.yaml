@@ -1,0 +1,39 @@
+server:
+  port: 8083
+
+services:
+  books:
+    uri: http://book-service:8080
+    registration-id: keycloak
+
+spring:
+  application:
+    name: admin-client
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://bks-keycloak:8080/realms/boolkus
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: admin-app
+            client-secret: drHE0eBoRAENaroK59E993VqfSp9pham
+            scope:
+              - openid
+              - microprofile-jwt
+              - view_books
+              - edit_books
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+minio:
+  url: http://bks-minio:9000
+  access-key: admin
+  secret-key: password
+  covers-bucket: covers
+  texts-bucket: texts
