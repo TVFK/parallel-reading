@@ -1,26 +1,53 @@
 name: parallel-reading
 services:
   # Infrastructure
+  keycloak-db:
+    image: postgres:16
+    container_name: keycloak-db
+    volumes:
+      - keycloak_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    networks:
+      - boolkus-net
+
   bks-keycloak:
     image: quay.io/keycloak/keycloak:26.2
     container_name: bks-keycloak
     environment:
+      # --- Database Configuration ---
+      KC_DB: postgres
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KC_DB_SCHEMA: public
+
+      # --- Administrator Credentials ---
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
 
-      KC_HOSTNAME: localhost
-      KC_HTTP_ENABLED: "true"
-      KC_HOSTNAME_STRICT: "false"
-      KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
-      KC_HOSTNAME_URL: http://localhost/auth
-      KC_PROXY_HEADERS: xforwarded
+      # proxy and hostname config
+      KC_FEATURES: hostname:v2
+      KC_PROXY_HEADERS: forwarded
+      KC_HOSTNAME: http://localhost/auth
+      KC_HOSTNAME_STRICT: false
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+
+
+      KC_LOG_LEVEL: info
+      KC_METRICS_ENABLED: true
+      KC_HEALTH_ENABLED: true
     volumes:
       - './config/keycloak/import:/opt/keycloak/data/import'
-    ports:
-      - '8082:8080'
     command: start-dev --import-realm
     networks:
       - boolkus-net
+    depends_on:
+      - keycloak-db
 
   bks-minio:
     image: minio/minio
@@ -168,6 +195,8 @@ services:
         JAR_FILE: translation-service/target/*-exec.jar
     environment:
       SPRING_PROFILES_ACTIVE: docker
+    env_file:
+      - /translation-service/.env
     networks:
       - boolkus-net
     depends_on:
@@ -206,8 +235,9 @@ volumes:
   minio_data:
   kafka_data:
   books_db_data:
+  keycloak_db_data:
   dictionary_db_data:
 
 networks:
-  boolkus-net: 
+  boolkus-net:
     driver: bridge

@@ -52,7 +52,7 @@ git clone https://github.com/TVFK/parallel-reading-frontend.git
 mvn clean package
 ```
 
-3**Start all services**
+3 **Start all services**
 
 ```shell
 docker compose up -d --build

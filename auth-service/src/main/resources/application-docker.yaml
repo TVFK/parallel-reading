@@ -4,7 +4,12 @@ server:
 spring:
   application:
     name: auth-service
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost/auth/realms/boolkus
+          jwk-set-uri: http://bks-keycloak:8080/realms/boolkus/protocol/openid-connect/certs
 keycloak:
   auth-server-url: http://bks-keycloak:8080
   realm: boolkus
