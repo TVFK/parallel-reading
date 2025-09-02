@@ -1,14 +1,12 @@
 package ru.taf.services;
 
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.taf.exceptions.BucketCreateException;
 import ru.taf.exceptions.FileUploadException;
 
 import java.util.Objects;
@@ -70,9 +68,28 @@ public class MinioService implements S3Service {
         try {
             if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+
+                String policy = """
+                        {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Principal": "*",
+                                    "Action": ["s3:GetObject"],
+                                    "Resource": ["arn:aws:s3:::%s/*"]
+                                }
+                            ]
+                        }
+                        """.formatted(bucketName);
+
+                minioClient.setBucketPolicy(SetBucketPolicyArgs.builder()
+                        .bucket(bucketName)
+                        .config(policy)
+                        .build());
             }
         } catch (Exception ex) {
-            throw new FileUploadException("Failed to create bucket: " + ex.getMessage());
+            throw new BucketCreateException("Failed to create bucket: " + ex.getMessage());
         }
     }
 
