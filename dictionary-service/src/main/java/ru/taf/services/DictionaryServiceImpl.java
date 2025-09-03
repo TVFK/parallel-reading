@@ -68,7 +68,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         dictionaryCard.setUser(user);
         dictionaryCard.setCreatedAt(LocalDate.now());
 
-        dictionaryCard.setDifficulty(2);
+        dictionaryCard.setTags(dictionaryCardDTO.tags());
         dictionaryCard.setRepetitionCount(0);
         dictionaryCard.setEaseFactor(2.5);
         dictionaryCard.setIntervalDays(1);
@@ -92,6 +92,8 @@ public class DictionaryServiceImpl implements DictionaryService {
                     card.setWord(dictionaryCardDTO.word());
                     card.setTranslation(dictionaryCardDTO.translation());
                     card.setContext(dictionaryCardDTO.context());
+                    card.setDifficulty(dictionaryCardDTO.difficulty());
+                    card.setTags(dictionaryCardDTO.tags());
 
                 }, () -> {
                     throw new DictionaryCardNotFoundException("dictionary_card.not_found");

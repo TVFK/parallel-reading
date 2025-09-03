@@ -19,10 +19,10 @@ public record NewDictionaryCardDTO(
         @NotBlank(message = "translation can't be empty")
         String translation,
 
-        @NotBlank(message = "translation can't be empty")
+        @NotBlank(message = "context can't be empty")
         String context,
 
-        @Range(min = 1, max = 3, message = "Diff must be between 1 and 3")
+        @Range(min = 1, max = 3, message = "Different must be between 1 and 3")
         int difficulty,
 
         Set<String> tags

@@ -48,9 +48,8 @@ public class DictionaryRestController {
         String userId = jwt.getSubject();
         DictionaryCardDTO createdDictCard = dictionaryService.createDictionaryCard(userId, card);
 
-        // TODO возможно, стоит поменять url к карточке, если появится такой путь
         return ResponseEntity.created(
-                uriComponentsBuilder.path("/dictionary")
+                uriComponentsBuilder.path("/dictionary/%s".formatted(createdDictCard.id()))
                         .build().toUri()
         ).body(createdDictCard);
     }
