@@ -28,8 +28,8 @@ public class Book {
     @Column(name = "author")
     private String author;
 
-    @Column(name = "image")
-    private String imageUrl;
+    @Column(name = "image_key")
+    private String imageKey;
 
     @Column(name = "published_year")
     private String publishedYear;

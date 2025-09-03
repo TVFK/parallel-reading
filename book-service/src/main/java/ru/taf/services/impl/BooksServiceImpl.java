@@ -113,12 +113,6 @@ public class BooksServiceImpl implements BooksService {
     public BookDTO createBook(NewBookDTO newBook) {
         Book entity = bookMapper.toEntity(newBook);
 
-        // FIXME исправить
-        if(entity.getNumberOfPage() == null || entity.getNumberOfPage() == 0){
-            entity.setNumberOfPage(1);
-        }
-        entity.setImageUrl("lalals");
-
         Book createdBook = booksRepository.save(entity);
         return bookMapper.toDto(createdBook);
     }

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-book" author="Tavfik">
+        <createTable tableName="book">
+            <column name="id" type="INT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_key" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="published_year" type="CHAR(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="level" type="CHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="number_of_page" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-genre" author="Tavfik">
+        <createTable tableName="genre">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-book-genre" author="Tavfik">
+        <createTable tableName="book_genre">
+            <column name="book_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="genre_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey
+                tableName="book_genre"
+                columnNames="book_id, genre_id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="book_genre"
+                baseColumnNames="book_id"
+                referencedTableName="book"
+                referencedColumnNames="id"
+                constraintName="fk_book_genre_book"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="book_genre"
+                baseColumnNames="genre_id"
+                referencedTableName="genre"
+                referencedColumnNames="id"
+                constraintName="fk_book_genre_genre"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="create-table-chapter" author="Tavfik">
+        <createTable tableName="chapter">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="book_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="chapter_order" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="chapter"
+                baseColumnNames="book_id"
+                referencedTableName="book"
+                referencedColumnNames="id"
+                constraintName="fk_chapter_book"
+                onDelete="CASCADE"/>
+
+        <addUniqueConstraint
+                tableName="chapter"
+                columnNames="book_id, chapter_order"
+                constraintName="uc_chapter_order"/>
+    </changeSet>
+
+    <changeSet id="create-table-page" author="Tavfik">
+        <createTable tableName="page">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="chapter_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="page_number" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="page"
+                baseColumnNames="chapter_id"
+                referencedTableName="chapter"
+                referencedColumnNames="id"
+                constraintName="fk_page_chapter"
+                onDelete="CASCADE"/>
+
+        <addUniqueConstraint
+                tableName="page"
+                columnNames="chapter_id, page_number"
+                constraintName="uc_page_number"/>
+    </changeSet>
+
+    <changeSet id="create-table-sentence" author="Tavfik">
+        <createTable tableName="sentence">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="page_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sentence_index" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="original_text" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="translated_text" type="TEXT"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="sentence"
+                baseColumnNames="page_id"
+                referencedTableName="page"
+                referencedColumnNames="id"
+                constraintName="fk_sentence_page"
+                onDelete="CASCADE"/>
+
+        <addUniqueConstraint
+                tableName="sentence"
+                columnNames="page_id, sentence_index"
+                constraintName="uc_sentence_index"/>
+    </changeSet>
+
+</databaseChangeLog>

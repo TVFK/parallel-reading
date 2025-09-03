@@ -8,7 +8,7 @@ public record BookDTO(
         int id,
         String title,
         String author,
-        String imageUrl,
+        String imageKey,
         String level,
         String publishedYear,
         int numberOfPage,

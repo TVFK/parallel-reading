@@ -4,8 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 public record NewBookDTO(
@@ -25,9 +23,10 @@ public record NewBookDTO(
 
         Set<String> genres,
 
-        String imageUrl,
+        String imageKey,
 
         @NotNull(message = "{books.create.errors.description_is_null}")
         @Size(max = 500, message = "{books.create.errors.description_size_is_invalid}")
         String description
-) {}
+) {
+}

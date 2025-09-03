@@ -36,5 +36,5 @@ public class NewBookDTO {
     @Size(max = 500, message = "{books.create.errors.description_size_is_invalid}")
     private String description;
 
-    private String imageUrl;
+    private String imageKey;
 }
