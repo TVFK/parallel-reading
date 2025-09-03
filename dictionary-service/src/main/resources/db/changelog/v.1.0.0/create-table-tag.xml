@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-tag" author="Tavfik">
+        <createTable tableName="tag">
+            <column name="card_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_tag_card_id"
+                             referencedTableName="dictionary_card" referencedColumnNames="id"
+                             deleteCascade="true"/>
+            </column>
+            <column name="tag" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="tag" columnNames="card_id, tag"
+                       constraintName="pk_tag"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -13,15 +13,15 @@ public interface DictionaryService {
 
     DictionaryCardDTO getDictionaryCardById(UUID cardId);
 
-    Page<DictionaryCardDTO> getUserDictCards(String userId, int page, int size, String sortBy);
+    Page<DictionaryCardDTO> getUserDictCards(UUID userId, int page, int size, String sortBy);
 
-    Page<DictionaryCardDTO> getCardsForReview(String userId, int page, int size);
+    Page<DictionaryCardDTO> getCardsForReview(UUID userId, int page, int size);
 
-    DictionaryCardDTO createDictionaryCard(String userId, NewDictionaryCardDTO dictionaryCardDTO);
+    DictionaryCardDTO createDictionaryCard(UUID userId, NewDictionaryCardDTO dictionaryCardDTO);
 
-    void updateDictCard(String userId, UUID cardId, UpdateDictionaryCardDTO dictionaryCardDTO);
+    void updateDictCard(UUID userId, UUID cardId, UpdateDictionaryCardDTO dictionaryCardDTO);
 
-    void deleteCard(String userId, UUID cardId);
+    void deleteCard(UUID userId, UUID cardId);
 
-    void reviewCard(String userId, ReviewCardDTO reviewDTO);
+    void reviewCard(UUID userId, ReviewCardDTO reviewDTO);
 }

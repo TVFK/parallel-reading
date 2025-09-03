@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -18,8 +19,8 @@ import java.util.List;
 public class User {
 
     @Id
-    private String id;
+    private UUID id;
 
     @OneToMany(mappedBy = "user")
-    private List<DictionaryCard> cards;
+    private List<DictionaryCard> cards = new ArrayList<>();
 }

@@ -12,6 +12,6 @@ import java.util.UUID;
 
 @Repository
 public interface DictionaryCardRepository extends JpaRepository<DictionaryCard, UUID> {
-    Page<DictionaryCard> findAllByUserId(String userId, Pageable pageable);
-    Page<DictionaryCard> findByUserIdAndNextReviewDateLessThanEqual(String userId, LocalDate date, Pageable pageable);
+    Page<DictionaryCard> findAllByUserId(UUID userId, Pageable pageable);
+    Page<DictionaryCard> findByUserIdAndNextReviewDateLessThanEqual(UUID userId, LocalDate date, Pageable pageable);
 }

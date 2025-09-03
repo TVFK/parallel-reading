@@ -42,7 +42,7 @@ public class DictCardRestController {
         }
 
         String userId = jwt.getSubject();
-        dictionaryService.updateDictCard(userId, cardId, card);
+        dictionaryService.updateDictCard(UUID.fromString(userId), cardId, card);
         return ResponseEntity.noContent().build();
     }
 
@@ -51,7 +51,7 @@ public class DictCardRestController {
             @PathVariable("cardId") UUID cardId,
             @AuthenticationPrincipal Jwt jwt
     ) {
-        dictionaryService.deleteCard(jwt.getSubject(), cardId);
+        dictionaryService.deleteCard(UUID.fromString(jwt.getSubject()), cardId);
         return ResponseEntity.noContent().build();
     }
 }

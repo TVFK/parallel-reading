@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-dictionary_card" author="Tavfik">
+        <createTable tableName="dictionary_card">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="word" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="translation" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="context" type="TEXT"/>
+            <column name="created_at" type="DATE" defaultValueComputed="NOW()"/>
+            <column name="next_review_date" type="DATE"/>
+            <column name="difficulty" type="INT">
+                <constraints checkConstraint="difficulty BETWEEN 1 AND 3"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_dictionary_card_user_id"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+            <column name="repetition_count" type="INT" defaultValue="0"/>
+            <column name="ease_factor" type="FLOAT" defaultValue="2.5"/>
+            <column name="interval_days" type="INT" defaultValue="1"/>
+        </createTable>
+
+        <sql>
+            ALTER TABLE dictionary_card
+                ADD CONSTRAINT ck_difficulty_range
+                    CHECK (difficulty BETWEEN 1 AND 3);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

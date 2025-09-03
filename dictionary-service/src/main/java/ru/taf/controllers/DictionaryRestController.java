@@ -15,6 +15,8 @@ import ru.taf.dto.NewDictionaryCardDTO;
 import ru.taf.dto.ReviewCardDTO;
 import ru.taf.services.DictionaryService;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/dictionary")
@@ -30,7 +32,7 @@ public class DictionaryRestController {
             @RequestParam(defaultValue = "date") String sort) {
 
         String userId = jwt.getSubject();
-        return ResponseEntity.ok(dictionaryService.getUserDictCards(userId, page, size, sort));
+        return ResponseEntity.ok(dictionaryService.getUserDictCards(UUID.fromString(userId), page, size, sort));
     }
 
     @PostMapping
@@ -46,7 +48,7 @@ public class DictionaryRestController {
         }
 
         String userId = jwt.getSubject();
-        DictionaryCardDTO createdDictCard = dictionaryService.createDictionaryCard(userId, card);
+        DictionaryCardDTO createdDictCard = dictionaryService.createDictionaryCard(UUID.fromString(userId), card);
 
         return ResponseEntity.created(
                 uriComponentsBuilder.path("/dictionary/%s".formatted(createdDictCard.id()))
@@ -62,14 +64,14 @@ public class DictionaryRestController {
     ) {
 
         String userId = jwt.getSubject();
-        return ResponseEntity.ok(dictionaryService.getCardsForReview(userId, page, size));
+        return ResponseEntity.ok(dictionaryService.getCardsForReview(UUID.fromString(userId), page, size));
     }
     @PostMapping("/review")
     public ResponseEntity<Void> reviewCard(
             @AuthenticationPrincipal Jwt jwt,
             @RequestBody ReviewCardDTO reviewCardDTO
     ) {
-        dictionaryService.reviewCard(jwt.getSubject(), reviewCardDTO);
+        dictionaryService.reviewCard(UUID.fromString(jwt.getSubject()), reviewCardDTO);
         return ResponseEntity.noContent().build();
     }
 }

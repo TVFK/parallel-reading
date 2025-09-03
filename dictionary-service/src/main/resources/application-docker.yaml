@@ -8,6 +8,8 @@ spring:
     url: jdbc:postgresql://bks-dictionary-db:5432/dictionary-db
     username: username
     password: password
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
   security:
     oauth2:
       resourceserver:

@@ -39,7 +39,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public Page<DictionaryCardDTO> getUserDictCards(String userId, int page, int size, String sortBy) {
+    public Page<DictionaryCardDTO> getUserDictCards(UUID userId, int page, int size, String sortBy) {
         Sort sort = switch (sortBy) {
             case "alphabet" -> Sort.by("word").ascending();
             case "review" -> Sort.by("nextReviewDate").ascending();
@@ -52,7 +52,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public Page<DictionaryCardDTO> getCardsForReview(String userId, int page, int size) {
+    public Page<DictionaryCardDTO> getCardsForReview(UUID userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return cardRepository.findByUserIdAndNextReviewDateLessThanEqual(userId, LocalDate.now(), pageable)
                 .map(cardMapper::toDto);
@@ -60,7 +60,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     @Transactional
-    public DictionaryCardDTO createDictionaryCard(String userId, NewDictionaryCardDTO dictionaryCardDTO) {
+    public DictionaryCardDTO createDictionaryCard(UUID userId, NewDictionaryCardDTO dictionaryCardDTO) {
         User user = new User();
         user.setId(userId);
 
@@ -81,7 +81,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     @Transactional
-    public void updateDictCard(String userId, UUID cardId, UpdateDictionaryCardDTO dictionaryCardDTO) {
+    public void updateDictCard(UUID userId, UUID cardId, UpdateDictionaryCardDTO dictionaryCardDTO) {
 
         cardRepository.findById(cardId)
                 .ifPresentOrElse(card -> {
@@ -102,7 +102,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     @Transactional
-    public void deleteCard(String userId, UUID cardId) {
+    public void deleteCard(UUID userId, UUID cardId) {
         DictionaryCard card = cardRepository.findById(cardId).orElseThrow(() ->
                 new DictionaryCardNotFoundException("dictionary_card.not_found")
         );
@@ -114,7 +114,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     @Transactional
-    public void reviewCard(String userId, ReviewCardDTO reviewDTO) {
+    public void reviewCard(UUID userId, ReviewCardDTO reviewDTO) {
         DictionaryCard card = cardRepository.findById(reviewDTO.cardId())
                 .orElseThrow(() -> new DictionaryCardNotFoundException("dictionary_card.not_found"));
 
