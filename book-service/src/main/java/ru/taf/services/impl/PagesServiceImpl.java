@@ -1,6 +1,7 @@
 package ru.taf.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.taf.dto.PageDTO;
@@ -50,6 +51,15 @@ public class PagesServiceImpl implements PagesService {
     public PageDTO getPrevPage(Integer pageId) {
         Page page = pagesRepository.findById(pageId-1).orElseThrow(() ->
                 new PageNotFoundException("page.not_found", pageId));
+
+        return pageMapper.toDto(page);
+    }
+
+    @Override
+    @Cacheable(value = "ChapterService::getFirstPage", key = "#chapterId")
+    public PageDTO getFirstPage(Integer chapterId) {
+        Page page = pagesRepository.findFirstByChapter_Id(chapterId).orElseThrow(() ->
+                new PageNotFoundException("Page for this chapter not found", chapterId));
 
         return pageMapper.toDto(page);
     }

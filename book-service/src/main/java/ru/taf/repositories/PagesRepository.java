@@ -3,6 +3,7 @@ package ru.taf.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import ru.taf.dto.PageDTO;
 import ru.taf.entities.Page;
 
 import java.util.List;
@@ -29,4 +30,6 @@ public interface PagesRepository extends JpaRepository<Page, Integer> {
             where b.id = ?1
             """)
     List<Page> findAllPagesByBookId(int bookId);
+
+    Optional<Page> findFirstByChapter_Id(Integer chapterId);
 }

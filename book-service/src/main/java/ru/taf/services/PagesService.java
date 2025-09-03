@@ -13,4 +13,6 @@ public interface PagesService {
     PageDTO getNextPage(Integer pageId);
 
     PageDTO getPrevPage(Integer pageId);
+
+    PageDTO getFirstPage(Integer chapterId);
 }

@@ -5,20 +5,24 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.taf.dto.ChapterDTO;
+import ru.taf.dto.PageDTO;
 import ru.taf.entities.Book;
 import ru.taf.dto.mappers.ChapterMapper;
 import ru.taf.entities.Chapter;
+import ru.taf.entities.Page;
 import ru.taf.exceptions.BookNotFoundException;
+import ru.taf.exceptions.PageNotFoundException;
 import ru.taf.repositories.BooksRepository;
 import ru.taf.repositories.ChaptersRepository;
+import ru.taf.repositories.PagesRepository;
 import ru.taf.services.ChaptersService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-@Service
 public class ChaptersServiceImpl implements ChaptersService {
 
     private final ChaptersRepository chaptersRepository;

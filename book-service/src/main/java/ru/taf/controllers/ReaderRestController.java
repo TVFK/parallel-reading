@@ -25,6 +25,13 @@ public class ReaderRestController {
         return pagesService.findAllPagesByBook(bookId);
     }
 
+    @GetMapping("/chapter-first-page")
+    public PageDTO getFirstPageOfChapter(
+            @RequestParam("chapterId") Integer chapterId
+    ){
+        return pagesService.getFirstPage(chapterId);
+    }
+
     @GetMapping("/next")
     public PageDTO getNextPage(@RequestParam("pageId") Integer pageId) {
         return pagesService.getNextPage(pageId);

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ChaptersRepository extends JpaRepository<Chapter, Integer> {
 
-    List<Chapter> findAllByBook_Id(Integer bookId); // Обратите внимание на "_" между Book и Id
+    List<Chapter> findAllByBook_Id(Integer bookId);
 }
