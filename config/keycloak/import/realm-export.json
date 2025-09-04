@@ -30,7 +30,7 @@
   "registrationAllowed": true,
   "registrationEmailAsUsername": true,
   "rememberMe": true,
-  "verifyEmail": false,
+  "verifyEmail": true,
   "loginWithEmailAllowed": true,
   "duplicateEmailsAllowed": false,
   "resetPasswordAllowed": true,
@@ -107,6 +107,7 @@
     ],
     "client": {
       "vue-client": [],
+      "auth-service": [],
       "realm-management": [
         {
           "id": "9fc9870c-05b4-4663-801e-2a11fec2009a",
@@ -436,6 +437,7 @@
   "requiredCredentials": [
     "password"
   ],
+  "passwordPolicy": "length(8) and notUsername(undefined) and hashAlgorithm(argon2)",
   "otpPolicyType": "totp",
   "otpPolicyAlgorithm": "HmacSHA1",
   "otpPolicyInitialCounter": 0,
@@ -491,6 +493,29 @@
       "realmRoles": [
         "default-roles-boolkus"
       ],
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "88bb821c-3ec2-4be0-b4f9-8dc72d618506",
+      "username": "service-account-auth-service",
+      "emailVerified": false,
+      "createdTimestamp": 1756928005329,
+      "enabled": true,
+      "totp": false,
+      "serviceAccountClientId": "auth-service",
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "default-roles-boolkus"
+      ],
+      "clientRoles": {
+        "realm-management": [
+          "view-users",
+          "query-users",
+          "manage-users"
+        ]
+      },
       "notBefore": 0,
       "groups": []
     }
@@ -740,6 +765,69 @@
       ]
     },
     {
+      "id": "fa1a79d5-59e9-4461-abf5-142aeb8e494a",
+      "clientId": "auth-service",
+      "name": "Authentication service",
+      "description": "",
+      "rootUrl": "http://localhost:8087",
+      "adminUrl": "http://localhost:8087",
+      "baseUrl": "http://localhost:8087",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "**********",
+      "redirectUris": [
+        "http://localhost:8087/*"
+      ],
+      "webOrigins": [
+        "http://localhost:8087"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "publicClient": false,
+      "frontchannelLogout": true,
+      "protocol": "openid-connect",
+      "attributes": {
+        "realm_client": "false",
+        "oidc.ciba.grant.enabled": "false",
+        "client.secret.creation.time": "1756928005",
+        "backchannel.logout.session.required": "true",
+        "standard.token.exchange.enabled": "false",
+        "frontchannel.logout.session.required": "true",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "display.on.consent.screen": "false",
+        "backchannel.logout.revoke.offline.tokens": "false"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "defaultClientScopes": [
+        "web-origins",
+        "service_account",
+        "acr",
+        "roles",
+        "profile",
+        "basic",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "organization",
+        "microprofile-jwt",
+        "view_books",
+        "edit_books",
+        "view_translation"
+      ]
+    },
+    {
       "id": "b35498c0-0b90-4da8-b640-3f3937896b0e",
       "clientId": "broker",
       "name": "${client_broker}",
@@ -897,9 +985,9 @@
       "clientId": "vue-client",
       "name": "Frontend",
       "description": "Frontend application",
-      "rootUrl": "http://localhost",
+      "rootUrl": "http://localhost:5173",
       "adminUrl": "",
-      "baseUrl": "http://localhost",
+      "baseUrl": "http://localhost:5173",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
@@ -908,7 +996,7 @@
         "/*"
       ],
       "webOrigins": [
-        "http://localhost"
+        "http://localhost:5173"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -927,7 +1015,7 @@
         "client.introspection.response.allow.jwt.claim.enabled": "false",
         "standard.token.exchange.enabled": "false",
         "frontchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "http://localhost/logout",
+        "post.logout.redirect.uris": "http://localhost:5173",
         "oauth2.device.authorization.grant.enabled": "false",
         "backchannel.logout.revoke.offline.tokens": "false",
         "use.refresh.tokens": "true",
@@ -2565,7 +2653,7 @@
       "name": "Verify Email",
       "providerId": "VERIFY_EMAIL",
       "enabled": true,
-      "defaultAction": false,
+      "defaultAction": true,
       "priority": 50,
       "config": {}
     },

@@ -59,6 +59,12 @@ docker compose up -d --build
 ```
 The application will be available at: http://localhost
 
+admin console: http://localhost:8083
+
+MinIO console: http://localhost:9090
+
+Keycloak console: http://localhost:8082
+
 ### Environment variables
 
 Translation service requires:

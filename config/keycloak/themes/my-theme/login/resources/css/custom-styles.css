@@ -1,0 +1,205 @@
+/* Общие стили для страниц логина и регистрации */
+.login-pf body,
+.registration-pf body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #F0F0F5;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Контейнер формы */
+#kc-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+/* Карточка формы */
+#kc-form-wrapper,
+#kc-register-form {
+    background: #FFFFFF;
+    padding: 2.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Заголовок */
+.kc-header-wrapper {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.kc-header-wrapper h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    color: #333333;
+    font-weight: 600;
+}
+
+/* Группы полей */
+.kc-form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Метки */
+.kc-form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #333333;
+    font-weight: 500;
+}
+
+/* Контейнеры input */
+.kc-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Поля ввода */
+.kc-input-group input[type="text"],
+.kc-input-group input[type="email"],
+.kc-input-group input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    border: 1px solid #CCC;
+    border-radius: 0.375rem;
+    box-sizing: border-box;
+    padding-right: 2.5rem;
+}
+
+.kc-input-group input:focus {
+    outline: none;
+    border-color: #A9A8FD;
+    box-shadow: 0 0 0 0.2rem rgba(169, 168, 253, 0.25);
+}
+
+/* Кнопка показа пароля */
+.kc-form-password-visibility-button {
+    position: absolute;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    color: #666;
+}
+
+/* Кнопка отправки */
+#kc-form-buttons {
+    margin-top: 1.5rem;
+}
+
+#kc-login,
+#kc-register-form .kc-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: #A9A8FD;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+}
+
+#kc-login:hover,
+#kc-register-form .kc-button:hover {
+    background-color: #908FFD;
+}
+
+/* Ссылки */
+.kc-form-options-wrapper a,
+#kc-registration a {
+    color: #A9A8FD;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.kc-form-options-wrapper a:hover,
+#kc-registration a:hover {
+    text-decoration: underline;
+}
+
+/* Чекбокс запомнить меня */
+.checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.checkbox label {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    font-size: 0.9rem;
+    color: #333333;
+}
+
+.checkbox input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+/* Сообщения об ошибках */
+.kc-input-error {
+    color: #d32f2f;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Социальные providers */
+#kc-social-providers {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+#kc-social-providers h2 {
+    font-size: 1rem;
+    color: #333333;
+    margin-bottom: 1rem;
+}
+
+.kc-form-social-account-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.kc-form-social-account-list li {
+    margin-bottom: 0.5rem;
+}
+
+.kc-form-social-account-list-button {
+    display: block;
+    padding: 0.75rem;
+    border: 1px solid #CCC;
+    border-radius: 0.375rem;
+    text-align: center;
+    text-decoration: none;
+    color: #333333;
+    transition: all 0.3s ease;
+}
+
+.kc-form-social-account-list-button:hover {
+    background-color: #F0F0F5;
+    text-decoration: none;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    #kc-container {
+        padding: 10px;
+    }
+
+    #kc-form-wrapper,
+    #kc-register-form {
+        padding: 1.5rem;
+    }
+}
