@@ -43,7 +43,7 @@ The system consists of the following microservices:
 1. **Clone the repository**
 
 ```shell
-git clone https://github.com/TVFK/parallel-reading-frontend.git
+git clone https://github.com/TVFK/parallel-reading.git
 ```
 
 2. project collection

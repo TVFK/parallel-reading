@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface BooksRepository extends JpaRepository<Book, Integer>, JpaSpecificationExecutor<Book> {
-    Optional<List<Book>> findAllByTitleLikeIgnoreCase(String title);
 
     Optional<Book> findByTitle(String title);
 }

@@ -41,7 +41,7 @@ public class ChaptersServiceImpl implements ChaptersService {
 
     @Transactional
     @Override
-    public void save(int bookId, Chapter chapter) {
+    public void create(int bookId, Chapter chapter) {
         Book book = booksRepository.findById(bookId).orElseThrow(() ->
                 new BookNotFoundException("book.not_found", bookId));
 

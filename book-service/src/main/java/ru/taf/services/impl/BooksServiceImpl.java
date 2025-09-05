@@ -74,10 +74,12 @@ public class BooksServiceImpl implements BooksService {
     }
 
     @Override
-    public Book getBookById(Integer bookId) {
+    public BookDTO getBookById(Integer bookId) {
 
-        return booksRepository.findById(bookId).orElseThrow(() ->
+        Book book = booksRepository.findById(bookId).orElseThrow(() ->
                 new BookNotFoundException("book.not_found", bookId));
+
+        return bookMapper.toDto(book);
     }
 
     @Override

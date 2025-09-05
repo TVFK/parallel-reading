@@ -1,19 +1,18 @@
 package ru.taf.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "Book")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class Book {
@@ -29,7 +28,7 @@ public class Book {
     private String author;
 
     @Column(name = "image_key")
-    private String imageKey;
+    private UUID imageKey;
 
     @Column(name = "published_year")
     private String publishedYear;

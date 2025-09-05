@@ -30,7 +30,7 @@ public class BooksService {
             String originalTextKey = minioService.uploadText(originalFile);
             String translatedTextKey = minioService.uploadText(translatedFile);
 
-            book.setImageUrl(coverImageKey);
+            book.setImageKey(coverImageKey);
             BookDTO createdBook = booksClient.createBook(book);
 
             BookUploadEvent bookUploadEvent = new BookUploadEvent(createdBook.getId(), originalTextKey, translatedTextKey);

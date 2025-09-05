@@ -43,7 +43,7 @@
 1. **Клонирование репозитория**
 
 ```shell
-git clone https://github.com/TVFK/parallel-reading-frontend.git
+git clone https://github.com/TVFK/parallel-reading.git
 ```
 2. **Сбор проекта**
 

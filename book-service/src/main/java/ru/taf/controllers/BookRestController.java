@@ -23,7 +23,7 @@ public class BookRestController {
     private final BooksService booksService;
 
     @GetMapping
-    public Book findBook(@PathVariable("bookId") Integer bookId) {
+    public BookDTO findBook(@PathVariable("bookId") Integer bookId) {
         return booksService.getBookById(bookId);
     }
 
