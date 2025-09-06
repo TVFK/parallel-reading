@@ -49,7 +49,7 @@ public class BookFillingEventListener {
                 pages.add(newPage);
             }
             newChapter.setPages(pages);
-            chaptersService.save(event.bookId(), newChapter);
+            chaptersService.create(event.bookId(), newChapter);
         }
     }
 }

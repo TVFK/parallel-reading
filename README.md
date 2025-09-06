@@ -46,7 +46,7 @@ The system consists of the following microservices:
 git clone https://github.com/TVFK/parallel-reading.git
 ```
 
-2. project collection
+2. **project collection**
 
 ```shell
 mvn clean package
