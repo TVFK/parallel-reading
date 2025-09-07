@@ -93,7 +93,7 @@ class BooksServiceImplTest {
         assertNotNull(exception.getMessage());
 
         verify(booksRepository).findById(4);
-        verifyNoMoreInteractions();
+        verifyNoMoreInteractions(booksRepository);
         verifyNoInteractions(bookMapper);
     }
 

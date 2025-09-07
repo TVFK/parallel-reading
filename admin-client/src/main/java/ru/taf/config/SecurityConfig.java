@@ -23,10 +23,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .anyRequest().hasRole("ADMIN"))
+                .authorizeHttpRequests(authorize -> authorize
+                        .anyRequest().hasRole("ADMIN")
+                )
                 .oauth2Login(Customizer.withDefaults())
                 .oauth2Client(Customizer.withDefaults())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                )
                 .build();
     }
 

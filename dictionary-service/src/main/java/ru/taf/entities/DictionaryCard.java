@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
@@ -25,7 +24,7 @@ public class DictionaryCard {
     @UuidGenerator(style = UuidGenerator.Style.RANDOM)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 

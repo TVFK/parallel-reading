@@ -1,11 +1,14 @@
 server:
   port: 8083
-
+  forward-headers-strategy: framework
 services:
   books:
     uri: http://book-service:8080
     registration-id: keycloak
-
+logging:
+  level:
+    org.springframework.security: debug
+    web: info
 spring:
   application:
     name: admin-client
@@ -14,19 +17,24 @@ spring:
       client:
         provider:
           keycloak:
-            issuer-uri: http://bks-keycloak:8080/realms/boolkus
+            authorization-uri: http://localhost/auth/realms/boolkus/protocol/openid-connect/auth
+            token-uri: http://bks-keycloak:8080/realms/boolkus/protocol/openid-connect/token
+            user-info-uri: http://bks-keycloak:8080/realms/boolkus/protocol/openid-connect/userinfo
+            jwk-set-uri: http://bks-keycloak:8080/realms/boolkus/protocol/openid-connect/certs
             user-name-attribute: preferred_username
         registration:
           keycloak:
             client-id: admin-app
             client-secret: drHE0eBoRAENaroK59E993VqfSp9pham
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
             scope:
               - openid
               - microprofile-jwt
               - view_books
               - edit_books
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: kafka:9094
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

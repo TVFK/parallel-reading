@@ -15,9 +15,6 @@
             <column name="author" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="author" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
             <column name="image_key" type="UUID">
                 <constraints nullable="false"/>
             </column>
