@@ -32,7 +32,7 @@ services:
       # proxy and hostname config
       KC_FEATURES: hostname:v2
       KC_PROXY_HEADERS: forwarded
-      KC_HOSTNAME: http://localhost/auth
+      KC_HOSTNAME: http://${SERVER_IP}/auth
       KC_HOSTNAME_STRICT: false
       KC_HTTP_ENABLED: true
       KC_HOSTNAME_STRICT_BACKCHANNEL: false
@@ -157,19 +157,24 @@ services:
       dockerfile: Dockerfile
       args:
         JAR_FILE: book-service/target/*-exec.jar
+    env_file:
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: docker
     networks:
       - boolkus-net
     depends_on:
       - bks-books-db
+      - books-service-cache
 
   book-upload-service:
-    restart: on-failure
+    restart: no
     build:
       dockerfile: Dockerfile
       args:
         JAR_FILE: book-upload-service/target/*-exec.jar
+    env_file:
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: docker
     networks:
@@ -181,6 +186,8 @@ services:
       dockerfile: Dockerfile
       args:
         JAR_FILE: dictionary-service/target/*-exec.jar
+    env_file:
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: docker
     networks:
@@ -198,6 +205,7 @@ services:
       SPRING_PROFILES_ACTIVE: docker
     env_file:
       - ./translation-service/.env
+      - .env
     networks:
       - boolkus-net
     depends_on:
@@ -209,6 +217,8 @@ services:
       dockerfile: Dockerfile
       args:
         JAR_FILE: admin-client/target/*-exec.jar
+    env_file:
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: docker
     networks:

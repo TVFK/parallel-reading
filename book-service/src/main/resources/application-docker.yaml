@@ -22,7 +22,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost/auth/realms/boolkus
+          issuer-uri: http://${SERVER_IP}/auth/realms/boolkus
           jwk-set-uri: http://bks-keycloak:8080/realms/boolkus/protocol/openid-connect/certs
   kafka:
     bootstrap-servers: kafka:9094

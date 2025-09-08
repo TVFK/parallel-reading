@@ -48,7 +48,7 @@ git clone https://github.com/TVFK/parallel-reading.git
 2. **Сбор проекта**
 
 ```shell
-mvn clean package
+mvn clean package -DskipTests
 ```
 
 3. **Запуск всех сервисов**

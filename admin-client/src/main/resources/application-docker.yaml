@@ -17,7 +17,7 @@ spring:
       client:
         provider:
           keycloak:
-            authorization-uri: http://localhost/auth/realms/boolkus/protocol/openid-connect/auth
+            authorization-uri: http://${SERVER_IP}/auth/realms/boolkus/protocol/openid-connect/auth
             token-uri: http://bks-keycloak:8080/realms/boolkus/protocol/openid-connect/token
             user-info-uri: http://bks-keycloak:8080/realms/boolkus/protocol/openid-connect/userinfo
             jwk-set-uri: http://bks-keycloak:8080/realms/boolkus/protocol/openid-connect/certs
