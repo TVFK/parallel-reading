@@ -21,10 +21,10 @@ public class SecurityConfig {
             Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers(HttpMethod.GET).hasAuthority("SCOPE_view_books")
                         .requestMatchers(HttpMethod.POST).hasAuthority("SCOPE_edit_books")
                         .requestMatchers(HttpMethod.PATCH).hasAuthority("SCOPE_edit_books")
                         .requestMatchers(HttpMethod.DELETE).hasAuthority("SCOPE_edit_books")
+                        .requestMatchers(HttpMethod.GET).permitAll()
                         .anyRequest().denyAll())
                 .csrf(CsrfConfigurer::disable)
                 .sessionManagement(sessionManagement -> sessionManagement
