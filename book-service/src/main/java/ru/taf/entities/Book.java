@@ -28,7 +28,7 @@ public class Book {
     private String author;
 
     @Column(name = "image_key")
-    private UUID imageKey;
+    private String imageKey;
 
     @Column(name = "published_year")
     private String publishedYear;

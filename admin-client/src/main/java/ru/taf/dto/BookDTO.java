@@ -16,5 +16,4 @@ public class BookDTO {
     private String publishedYear;
     private int numberOfPage;
     private String description;
-    private String image;
 }

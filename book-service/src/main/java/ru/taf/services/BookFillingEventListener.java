@@ -4,18 +4,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.taf.dto.kafka.BookFillingEvent;
+import ru.taf.entities.Book;
 import ru.taf.entities.Chapter;
 import ru.taf.entities.Page;
 import ru.taf.entities.Sentence;
+import ru.taf.exceptions.BookNotFoundException;
+import ru.taf.repositories.BooksRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class BookFillingEventListener {
 
     private final ChaptersService chaptersService;
+    private final BooksRepository booksRepository;
 
     @KafkaListener(
             topics = "book-creation-events",
@@ -27,12 +32,17 @@ public class BookFillingEventListener {
             throw new RuntimeException("Sth went wrong");
         }
 
+        Book book = booksRepository.findById(event.bookId()).orElseThrow(() ->
+                new BookNotFoundException("book not found", event.bookId()));
+
+        int numberOfPage = 0;
         for(var chapter : event.chapters()){
             Chapter newChapter = new Chapter();
             newChapter.setChapterOrder(chapter.chapterOrder());
             newChapter.setTitle(chapter.title());
             List<Page> pages = new ArrayList<>();
             for(var page : chapter.pages()){
+                numberOfPage++;
                 Page newPage = new Page();
                 newPage.setPageNumber(page.pageNumber());
                 newPage.setChapter(newChapter);
@@ -51,5 +61,7 @@ public class BookFillingEventListener {
             newChapter.setPages(pages);
             chaptersService.create(event.bookId(), newChapter);
         }
+        book.setNumberOfPage(numberOfPage);
+        booksRepository.save(book);
     }
 }

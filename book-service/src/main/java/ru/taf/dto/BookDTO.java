@@ -12,7 +12,7 @@ public record BookDTO(
         int id,
         String title,
         String author,
-        UUID imageKey,
+        String imageKey,
         String publishedYear,
         String level,
         String description,

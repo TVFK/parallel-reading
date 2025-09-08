@@ -6,7 +6,7 @@
 
     <changeSet id="create-table-book" author="Tavfik">
         <createTable tableName="book">
-            <column name="id" type="INT">
+            <column name="id" type="INT GENERATED ALWAYS AS IDENTITY">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="title" type="VARCHAR(255)">
@@ -15,7 +15,7 @@
             <column name="author" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="image_key" type="UUID">
+            <column name="image_key" type="VARCHAR(55)">
                 <constraints nullable="false"/>
             </column>
             <column name="published_year" type="CHAR(4)">
@@ -27,9 +27,7 @@
             <column name="description" type="VARCHAR(500)">
                 <constraints nullable="false"/>
             </column>
-            <column name="number_of_page" type="INT">
-                <constraints nullable="false"/>
-            </column>
+            <column name="number_of_page" type="INT"/>
         </createTable>
     </changeSet>
 

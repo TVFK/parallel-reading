@@ -19,7 +19,7 @@ public class DataUtils {
                         i,
                         "title %d".formatted(i),
                         "author %d".formatted(i),
-                        UUID.randomUUID(),
+                        UUID.randomUUID().toString(),
                         "198%d".formatted(i),
                         "C1",
                         "description %d".formatted(i),
@@ -35,7 +35,7 @@ public class DataUtils {
                         i,
                         "title %d".formatted(i),
                         "author %d".formatted(i),
-                        UUID.randomUUID(),
+                        UUID.randomUUID().toString(),
                         "198%d".formatted(i),
                         "C1",
                         "description %d".formatted(i),
@@ -49,7 +49,7 @@ public class DataUtils {
                 .id(1)
                 .title("title")
                 .author("author")
-                .imageKey(UUID.randomUUID())
+                .imageKey(UUID.randomUUID().toString())
                 .publishedYear("1982")
                 .level("C1")
                 .description("description")
@@ -67,7 +67,7 @@ public class DataUtils {
                 .id(1)
                 .title("title")
                 .author("author")
-                .imageKey(UUID.randomUUID())
+                .imageKey(UUID.randomUUID().toString())
                 .publishedYear("1982")
                 .level("C1")
                 .description("description")
