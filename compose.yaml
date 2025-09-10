@@ -32,7 +32,7 @@ services:
       # proxy and hostname config
       KC_FEATURES: hostname:v2
       KC_PROXY_HEADERS: forwarded
-      KC_HOSTNAME: http://${SERVER_IP}/auth
+      KC_HOSTNAME: ${BASE_URL}/auth
       KC_HOSTNAME_STRICT: false
       KC_HTTP_ENABLED: true
       KC_HOSTNAME_STRICT_BACKCHANNEL: false
