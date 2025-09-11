@@ -216,7 +216,7 @@ services:
       args:
         JAR_FILE: book-service/target/*-exec.jar
     env_file:
-      - .env
+      - .env.prod
     environment:
       SPRING_PROFILES_ACTIVE: prod
     networks:
@@ -243,7 +243,7 @@ services:
       args:
         JAR_FILE: book-upload-service/target/*-exec.jar
     env_file:
-      - .env
+      - .env.prod
     environment:
       SPRING_PROFILES_ACTIVE: prod
     networks:
@@ -266,7 +266,7 @@ services:
       args:
         JAR_FILE: dictionary-service/target/*-exec.jar
     env_file:
-      - .env
+      - .env.prod
     environment:
       SPRING_PROFILES_ACTIVE: prod
     networks:
@@ -292,7 +292,7 @@ services:
       SPRING_PROFILES_ACTIVE: prod
     env_file:
       - ./translation-service/.env
-      - .env
+      - .env.prod
     networks:
       - boolkus-net
     depends_on:
@@ -313,7 +313,7 @@ services:
       args:
         JAR_FILE: admin-client/target/*-exec.jar
     env_file:
-      - .env
+      - .env.prod
     environment:
       SPRING_PROFILES_ACTIVE: prod
     networks:
