@@ -14,7 +14,7 @@
 
 Не очень красивая архитектурная схема, но я обязательно сделаю её красивее!!!
 
-![Architecture scheme](https://github.com/user-attachments/assets/f1fd5b71-e1a4-4773-8186-64231b27cbe1)
+![Architecture scheme](./docs/architectural_scheme.png)
 
 ### Сервисы
 
