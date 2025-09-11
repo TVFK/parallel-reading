@@ -218,7 +218,7 @@ services:
     env_file:
       - .env
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: prod
     networks:
       - boolkus-net
     depends_on:
@@ -245,7 +245,7 @@ services:
     env_file:
       - .env
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: prod
     networks:
       - boolkus-net
     depends_on:
@@ -268,7 +268,7 @@ services:
     env_file:
       - .env
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: prod
     networks:
       - boolkus-net
     depends_on:
@@ -289,7 +289,7 @@ services:
       args:
         JAR_FILE: translation-service/target/*-exec.jar
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: prod
     env_file:
       - ./translation-service/.env
       - .env
@@ -315,7 +315,7 @@ services:
     env_file:
       - .env
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: prod
     networks:
     depends_on:
       kafka:
