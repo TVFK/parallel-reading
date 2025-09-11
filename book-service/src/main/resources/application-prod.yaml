@@ -4,9 +4,9 @@ spring:
   application:
     name: books-service
   datasource:
-    url: jdbc:postgresql://bks-books-db:5432/books-db
+    url: jdbc:postgresql://books-db:5432/books-db
     username: username
-    password: password
+    password: ${BOOKS_DB_PASSWORD}
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
   cache:
@@ -17,13 +17,13 @@ spring:
     redis:
       host: books-service-cache
       port: 6379
-      password: password
+      password: ${BOOKS_SERVICE_CACHE_PASSWORD}
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: ${BASE_URL}/auth/realms/boolkus
-          jwk-set-uri: http://bks-keycloak:8080/realms/boolkus/protocol/openid-connect/certs
+          jwk-set-uri: http://keycloak:8080/realms/boolkus/protocol/openid-connect/certs
   kafka:
     bootstrap-servers: kafka:9094
     consumer:

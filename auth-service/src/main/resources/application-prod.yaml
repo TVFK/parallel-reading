@@ -9,10 +9,10 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${BASE_URL}/auth/realms/boolkus
-          jwk-set-uri: http://bks-keycloak:8080/realms/boolkus/protocol/openid-connect/certs
+          jwk-set-uri: http://keycloak:8080/realms/boolkus/protocol/openid-connect/certs
 keycloak:
-  auth-server-url: http://bks-keycloak:8080
+  auth-server-url: http://keycloak:8080
   realm: boolkus
-  resource: user-manager
+  resource: auth-service
   credentials:
     secret: gkaUiQqNvIPpS45UQYl2XwZQoqidvaa7

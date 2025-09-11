@@ -1,0 +1,337 @@
+name: parallel-reading
+
+services:
+  # Infrastructure
+  keycloak-db:
+    image: postgres:16
+    container_name: keycloak-db
+    volumes:
+      - keycloak_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+    networks:
+      - boolkus-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U keycloak -d keycloak" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2
+    container_name: keycloak
+    environment:
+      # --- Database Configuration ---
+      KC_DB: postgres
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KC_DB_SCHEMA: public
+
+      # --- Administrator Credentials ---
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_LOGIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+
+      # proxy and hostname config
+      KC_FEATURES: hostname:v2
+      KC_PROXY_HEADERS: forwarded
+      KC_HOSTNAME: ${BASE_URL}/auth
+      KC_HOSTNAME_STRICT: false
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+
+      # logging
+      KC_LOG_LEVEL: info
+      KC_METRICS_ENABLED: true
+      KC_HEALTH_ENABLED: true
+    volumes:
+      - './config/keycloak/import:/opt/keycloak/data/import'
+      - './config/keycloak/themes:/opt/keycloak/themes'
+      - './ssl:/etc/keycloak/ssl'
+    command: start --import-realm
+    networks:
+      - boolkus-net
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - boolkus-net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,INTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092,INTERNAL://kafka:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      -  KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL
+    volumes:
+      - kafka_data:/bitnami/kafka
+    networks:
+      - boolkus-net
+    healthcheck:
+      test: [ "CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9092", "--list" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./config/nginx/prod
+      dockerfile: Dockerfile.prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt/live/${DOMAIN}/fullchain.pem:/etc/nginx/ssl/fullchain.pem
+      - /etc/letsencrypt/live/${DOMAIN}/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
+    networks:
+      - boolkus-net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      book-service:
+        condition: service_healthy
+      admin-client:
+        condition: service_healthy
+      translation-service:
+        condition: service_healthy
+      dictionary-service:
+        condition: service_healthy
+
+  books-db:
+    image: postgres:16
+    container_name: books-db
+    environment:
+      POSTGRES_DB: books-db
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: ${BOOKS_DB_PASSWORD}
+    volumes:
+      - books_db_data:/var/lib/postgresql/data
+    networks:
+      - boolkus-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U username -d books-db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  dictionary-db:
+    image: postgres:16
+    container_name: dictionary-db
+    environment:
+      POSTGRES_DB: dictionary-db
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: ${DICTIONARY_DB_PASSWORD}
+    volumes:
+      - dictionary_db_data:/var/lib/postgresql/data
+    networks:
+      - boolkus-net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U username -d dictionary-db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  books-service-cache:
+    image: redis:latest
+    container_name: books-service-cache
+    command: redis-server --requirepass ${BOOKS_SERVICE_CACHE_PASSWORD}
+    environment:
+      REDIS_PASSWORD: ${BOOKS_SERVICE_CACHE_PASSWORD}
+    networks:
+      - boolkus-net
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "${BOOKS_SERVICE_CACHE_PASSWORD}", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  translation-service-cache:
+    image: redis:latest
+    container_name: translation-service-cache
+    command: redis-server --requirepass ${TRANSLATION_SERVICE_CACHE_PASSWORD}
+    environment:
+      REDIS_PASSWORD: ${TRANSLATION_SERVICE_CACHE_PASSWORD}
+    networks:
+      - boolkus-net
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "${TRANSLATION_SERVICE_CACHE_PASSWORD}", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  # Services
+  book-service:
+    restart: unless-stopped
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: book-service/target/*-exec.jar
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - boolkus-net
+    depends_on:
+      books-db:
+        condition: service_healthy
+      books-service-cache:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+
+  book-upload-service:
+    restart: unless-stopped
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: book-upload-service/target/*-exec.jar
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - boolkus-net
+    depends_on:
+      kafka:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+
+  dictionary-service:
+    restart: unless-stopped
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: dictionary-service/target/*-exec.jar
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - boolkus-net
+    depends_on:
+      dictionary-db:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+
+  translation-service:
+    restart: unless-stopped
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: translation-service/target/*-exec.jar
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    env_file:
+      - ./translation-service/.env
+      - .env
+    networks:
+      - boolkus-net
+    depends_on:
+      translation-service-cache:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+
+  admin-client:
+    restart: unless-stopped
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: admin-client/target/*-exec.jar
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+    depends_on:
+      kafka:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+
+volumes:
+  minio_data:
+  kafka_data:
+  books_db_data:
+  keycloak_db_data:
+  dictionary_db_data:
+
+networks:
+  boolkus-net:
+    driver: bridge

@@ -1,0 +1,15 @@
+FROM node:20-alpine AS frontend-builder
+RUN apk add --no-cache git
+WORKDIR /app
+RUN git clone https://github.com/TVFK/parallel-reading-frontend . \
+    && npm ci && npm run build
+
+FROM nginx:alpine
+COPY --from=frontend-builder /app/dist /usr/share/nginx/html
+COPY nginx-prod.conf /etc/nginx/nginx.conf
+
+RUN mkdir -p /etc/nginx/ssl
+COPY ssl/fullchain.pem /etc/nginx/ssl/fullchain.pem
+COPY ssl/privkey.pem /etc/nginx/ssl/privkey.pem
+
+RUN chmod 600 /etc/nginx/ssl/privkey.pem

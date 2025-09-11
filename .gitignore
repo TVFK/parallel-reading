@@ -34,3 +34,6 @@ build/
 
 ### Enviroment file ###
 /translation-service/.env
+
+# Infra
+.env.prod
