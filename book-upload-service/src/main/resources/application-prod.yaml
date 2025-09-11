@@ -23,4 +23,6 @@ spring:
 
 minio:
   url: http://minio:9000
+  access-key: ${MINIO_ROOT_USER}
+  secret-key: ${MINIO_ROOT_PASSWORD}
   bucket: texts

@@ -7,8 +7,6 @@ yandex:
       key: ${YANDEX_DICT_API_KEY}
       lang: en-ru
 spring:
-  application:
-    name: translation-service
   cache:
     type: redis
     redis:
@@ -17,8 +15,10 @@ spring:
     redis:
       host: translation-service-cache
       port: 6379
+      password: ${TRANSLATION_SERVICE_CACHE_PASSWORD}
   security:
     oauth2:
       resourceserver:
         jwt:
+          issuer-uri: ${BASE_URL}/auth/realms/boolkus
           jwk-set-uri: http://keycloak:8080/realms/boolkus/protocol/openid-connect/certs

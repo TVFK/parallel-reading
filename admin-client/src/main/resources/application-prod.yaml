@@ -13,6 +13,7 @@ spring:
       client:
         provider:
           keycloak:
+            authorization-uri: ${BASE_URL}/auth/realms/boolkus/protocol/openid-connect/auth
             token-uri: http://keycloak:8080/realms/boolkus/protocol/openid-connect/token
             user-info-uri: http://keycloak:8080/realms/boolkus/protocol/openid-connect/userinfo
             jwk-set-uri: http://keycloak:8080/realms/boolkus/protocol/openid-connect/certs
@@ -36,5 +37,7 @@ spring:
 
 minio:
   url: http://minio:9000
+  access-key: ${MINIO_ROOT_USER}
+  secret-key: ${MINIO_ROOT_PASSWORD}
   covers-bucket: covers
   texts-bucket: texts
