@@ -33,8 +33,8 @@ services:
       KC_DB_SCHEMA: public
 
       # --- Administrator Credentials ---
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_LOGIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_LOGIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
 
       # proxy and hostname config
       KC_FEATURES: hostname:v2
@@ -42,6 +42,7 @@ services:
       KC_HOSTNAME: ${BASE_URL}/auth
       KC_HOSTNAME_STRICT: false
       KC_HTTP_ENABLED: true
+      KC_HTTPS_ENABLED: false
       KC_HOSTNAME_STRICT_BACKCHANNEL: false
 
       # logging
@@ -51,8 +52,10 @@ services:
     volumes:
       - './config/keycloak/import:/opt/keycloak/data/import'
       - './config/keycloak/themes:/opt/keycloak/themes'
-      - './ssl:/etc/keycloak/ssl'
-    command: start --import-realm
+    command:
+      - start
+      - --optimized
+      - --import-realm
     networks:
       - boolkus-net
     depends_on:

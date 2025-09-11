@@ -12,8 +12,6 @@ A platform for parallel reading of books in foreign languages with an integrated
 
 ## Architecture
 
-Not a very beautiful architectural scheme, I'll definitely make it more beautiful!!!
-
 ![Architecture scheme](./docs/architectural_scheme.png)
 
 ### Services
