@@ -214,10 +214,10 @@ services:
       dockerfile: Dockerfile
       args:
         JAR_FILE: book-service/target/*-exec.jar
-    env_file:
-      - .env
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_PASSWORD: ${BOOKS_DB_PASSWORD}
+      SPRING_DATA_REDIS_PASSWORD: ${BOOKS_SERVICE_CACHE_PASSWORD}
     networks:
       - boolkus-net
     depends_on:
@@ -241,10 +241,10 @@ services:
       dockerfile: Dockerfile
       args:
         JAR_FILE: book-upload-service/target/*-exec.jar
-    env_file:
-      - .env
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      SPRING_MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      SPRING_MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
     networks:
       - boolkus-net
     depends_on:
@@ -264,10 +264,10 @@ services:
       dockerfile: Dockerfile
       args:
         JAR_FILE: dictionary-service/target/*-exec.jar
-    env_file:
-      - .env
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_PASSWORD: ${DICTIONARY_DB_PASSWORD}
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: ${BASE_URL}/auth/realms/boolkus
     networks:
       - boolkus-net
     depends_on:
@@ -289,9 +289,11 @@ services:
         JAR_FILE: translation-service/target/*-exec.jar
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      YANDEX_DICTIONARY_API_KEY: ${YANDEX_DICT_API_KEY}
+      SPRING_DATA_REDIS_PASSWORD: ${TRANSLATION_SERVICE_CACHE_PASSWORD}
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: ${BASE_URL}/auth/realms/boolkus
     env_file:
       - ./translation-service/.env
-      - .env
     networks:
       - boolkus-net
     depends_on:
@@ -311,10 +313,11 @@ services:
       dockerfile: Dockerfile
       args:
         JAR_FILE: admin-client/target/*-exec.jar
-    env_file:
-      - .env
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION_URI: ${BASE_URL}/auth/realms/boolkus/protocol/openid-connect/auth
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
     networks:
       - boolkus-net
     depends_on:

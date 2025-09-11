@@ -7,12 +7,10 @@ spring:
   datasource:
     url: jdbc:postgresql://dictionary-db:5432/dictionary-db
     username: username
-    password: ${DICTIONARY_DB_PASSWORD}
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${BASE_URL}/auth/realms/boolkus
           jwk-set-uri: http://keycloak:8080/realms/boolkus/protocol/openid-connect/certs

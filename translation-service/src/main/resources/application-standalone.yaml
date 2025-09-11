@@ -7,6 +7,8 @@ yandex:
       key: ${YANDEX_DICT_API_KEY}
       lang: en-ru
 spring:
+  application:
+    name: translation-service
   cache:
     type: redis
     redis:
