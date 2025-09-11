@@ -14,5 +14,5 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${BASE_URL}/auth/realms/boolkus
+          issuer-uri: http://localhost/auth/realms/boolkus
           jwk-set-uri: http://bks-keycloak:8080/realms/boolkus/protocol/openid-connect/certs

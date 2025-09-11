@@ -36,4 +36,4 @@ build/
 /translation-service/.env
 
 # Infra
-.env.prod
+.env

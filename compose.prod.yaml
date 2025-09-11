@@ -43,30 +43,29 @@ services:
       KC_HOSTNAME_STRICT: false
       KC_HTTP_ENABLED: true
       KC_HTTPS_ENABLED: false
+      KC_HOSTNAME_STRICT_HTTPS: false
       KC_HOSTNAME_STRICT_BACKCHANNEL: false
 
       # logging
       KC_LOG_LEVEL: info
       KC_METRICS_ENABLED: true
       KC_HEALTH_ENABLED: true
+      KC_HTTP_MANAGEMENT_PORT: 9000
     volumes:
       - './config/keycloak/import:/opt/keycloak/data/import'
       - './config/keycloak/themes:/opt/keycloak/themes'
-    command:
-      - start
-      - --optimized
-      - --import-realm
+    command: start --import-realm
     networks:
       - boolkus-net
     depends_on:
       keycloak-db:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ready" ]
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\r\nhost: localhost:9000\r\nConnection: close\r\n\r\n' >&3; cat <&3 | grep -q '\"status\": \"UP\"' && exit 0 || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
-      start_period: 30s
+      start_period: 60s
 
   minio:
     image: minio/minio
@@ -216,7 +215,7 @@ services:
       args:
         JAR_FILE: book-service/target/*-exec.jar
     env_file:
-      - .env.prod
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: prod
     networks:
@@ -243,7 +242,7 @@ services:
       args:
         JAR_FILE: book-upload-service/target/*-exec.jar
     env_file:
-      - .env.prod
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: prod
     networks:
@@ -266,7 +265,7 @@ services:
       args:
         JAR_FILE: dictionary-service/target/*-exec.jar
     env_file:
-      - .env.prod
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: prod
     networks:
@@ -292,7 +291,7 @@ services:
       SPRING_PROFILES_ACTIVE: prod
     env_file:
       - ./translation-service/.env
-      - .env.prod
+      - .env
     networks:
       - boolkus-net
     depends_on:
@@ -313,10 +312,11 @@ services:
       args:
         JAR_FILE: admin-client/target/*-exec.jar
     env_file:
-      - .env.prod
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: prod
     networks:
+      - boolkus-net
     depends_on:
       kafka:
         condition: service_healthy
