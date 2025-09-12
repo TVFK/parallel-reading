@@ -41,3 +41,12 @@ minio:
   secret-key: ${MINIO_ROOT_PASSWORD}
   covers-bucket: covers
   texts-bucket: texts
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
