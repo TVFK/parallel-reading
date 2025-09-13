@@ -28,6 +28,7 @@ public class SecurityConfig {
         return http
                 .securityMatcher("/actuator/**")
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/actuator/**").hasAuthority("SCOPE_metrics")
                         .anyRequest().denyAll())
                 .oauth2ResourceServer(customizer -> customizer.jwt(Customizer.withDefaults()))
