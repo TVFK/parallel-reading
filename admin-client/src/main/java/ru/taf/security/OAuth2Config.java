@@ -1,5 +1,6 @@
 package ru.taf.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,9 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 
 @Configuration
 public class OAuth2Config {
+
+    @Value("${BASE_URL}")
+    private String baseUrl;
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository(OAuth2ClientProperties properties) {
@@ -29,8 +33,10 @@ public class OAuth2Config {
                 .userNameAttributeName(prov.getUserNameAttribute())
                 .build();
 
+        String issuerUri = baseUrl + "/auth/realms/boolkus";
+
         ClientRegistration updated = ClientRegistration.withClientRegistration(cr)
-                .issuerUri("https://boolkus.ru/auth/realms/boolkus")
+                .issuerUri(issuerUri)
                 .build();
 
         return new InMemoryClientRegistrationRepository(updated);

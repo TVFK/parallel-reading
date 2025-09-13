@@ -1,7 +1,9 @@
 package ru.taf.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,11 @@ public class BooksServiceImpl implements BooksService {
     private final BookMapper bookMapper;
 
     @Override
+    @Cacheable(
+            value = "books",
+            key = "{#title, #genres, #level, #sort}",
+            condition = "#title == null && #genres == null && #level == null && #sort == null"
+    )
     public List<BookDTO> getBooks(String title, String genres, String level, String sort) {
 
         Specification<Book> spec = BookSpecifications.withFilters(title, genres, level);
@@ -48,7 +55,7 @@ public class BooksServiceImpl implements BooksService {
 
     // TODO сделать через view/func в PostgreSQL
     @Override
-    @Cacheable(value = "BookService::getBooksGroupedByLevels")
+    @Cacheable(value = "booksGroupedByLevel")
     public List<List<BookDTO>> getBooksGroupedByLevel() {
         List<Book> books = booksRepository.findAll();
         List<List<Book>> booksByLevel = new ArrayList<>();
@@ -92,6 +99,10 @@ public class BooksServiceImpl implements BooksService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "booksGroupedByLevel", allEntries = true),
+            @CacheEvict(value = "books", allEntries = true)
+    })
     public void updateBook(Integer bookId, UpdateBookDTO bookDTO) {
         booksRepository.findById(bookId)
                 .ifPresentOrElse(book -> {
@@ -106,12 +117,20 @@ public class BooksServiceImpl implements BooksService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "booksGroupedByLevel", allEntries = true),
+            @CacheEvict(value = "books", allEntries = true)
+    })
     public void deleteBook(Integer bookId) {
         booksRepository.deleteById(bookId);
     }
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "booksGroupedByLevel", allEntries = true),
+            @CacheEvict(value = "books", allEntries = true)
+    })
     public BookDTO createBook(NewBookDTO newBook) {
         Book entity = bookMapper.toEntity(newBook);
 

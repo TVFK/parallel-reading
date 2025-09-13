@@ -1,6 +1,8 @@
 package ru.taf.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.taf.dto.kafka.BookFillingEvent;
@@ -13,7 +15,6 @@ import ru.taf.repositories.BooksRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +28,12 @@ public class BookFillingEventListener {
             groupId = "${spring.kafka.consumer.group-id}",
             containerFactory = "kafkaListenerContainerFactory"
     )
+    @Caching(evict = {
+            @CacheEvict(value = "booksGroupedByLevel", allEntries = true),
+            @CacheEvict(value = "books", allEntries = true)
+    })
     public void handleBookUpload(BookFillingEvent event) {
-        if(event == null){
+        if (event == null) {
             throw new RuntimeException("Sth went wrong");
         }
 
@@ -36,18 +41,18 @@ public class BookFillingEventListener {
                 new BookNotFoundException("book not found", event.bookId()));
 
         int numberOfPage = 0;
-        for(var chapter : event.chapters()){
+        for (var chapter : event.chapters()) {
             Chapter newChapter = new Chapter();
             newChapter.setChapterOrder(chapter.chapterOrder());
             newChapter.setTitle(chapter.title());
             List<Page> pages = new ArrayList<>();
-            for(var page : chapter.pages()){
+            for (var page : chapter.pages()) {
                 numberOfPage++;
                 Page newPage = new Page();
                 newPage.setPageNumber(page.pageNumber());
                 newPage.setChapter(newChapter);
                 List<Sentence> sentences = new ArrayList<>();
-                for(var sentence : page.sentences()){
+                for (var sentence : page.sentences()) {
                     Sentence newSentence = new Sentence();
                     newSentence.setSentenceIndex(sentence.sentenceIndex());
                     newSentence.setPage(newPage);

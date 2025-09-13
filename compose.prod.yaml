@@ -136,10 +136,6 @@ services:
         condition: service_healthy
       admin-client:
         condition: service_healthy
-      translation-service:
-        condition: service_healthy
-      dictionary-service:
-        condition: service_healthy
 
   books-db:
     image: postgres:16
