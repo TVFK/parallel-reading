@@ -29,6 +29,10 @@ spring:
               - microprofile-jwt
               - view_books
               - edit_books
+      resourceserver:
+        jwt:
+          issuer-uri: ${BASE_URL}/auth/realms/boolkus
+          jwk-set-uri: http://keycloak:8080/realms/boolkus/protocol/openid-connect/certs
   kafka:
     bootstrap-servers: kafka:9094
     producer:
@@ -53,3 +57,9 @@ management:
   endpoint:
     health:
       show-details: always
+  zipkin:
+    tracing:
+      endpoint: http://tempo:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 0.3

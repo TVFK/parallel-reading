@@ -61,7 +61,7 @@ services:
       keycloak-db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\r\nhost: localhost:9000\r\nConnection: close\r\n\r\n' >&3; cat <&3 | grep -q '\"status\": \"UP\"' && exit 0 || exit 1"]
+      test: [ "CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\r\nhost: localhost:9000\r\nConnection: close\r\n\r\n' >&3; cat <&3 | grep -q '\"status\": \"UP\"' && exit 0 || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -96,7 +96,7 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      -  KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL
     volumes:
       - kafka_data:/bitnami/kafka
     networks:
@@ -218,7 +218,14 @@ services:
       - '--storageDataPath=/storage'
     networks:
       - boolkus-net
-
+  tempo:
+    image: grafana/tempo:2.3.1
+    command: -config.file=/etc/tempo.yaml
+    volumes:
+      - './config/tempo/tempo.yaml:/etc/tempo.yaml'
+      - 'tempo_data:/var/tempo'
+    networks:
+      - boolkus-net
   grafana:
     image: grafana/grafana:10.2.4
     container_name: grafana
@@ -383,6 +390,7 @@ services:
 volumes:
   minio_data:
   kafka_data:
+  tempo_data:
   books_db_data:
   keycloak_db_data:
   dictionary_db_data:
