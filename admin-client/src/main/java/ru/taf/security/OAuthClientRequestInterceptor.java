@@ -3,6 +3,7 @@ package ru.taf.security;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -17,6 +18,7 @@ import ru.taf.exceptions.AuthorizationException;
 
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 public class OAuthClientRequestInterceptor implements ClientHttpRequestInterceptor {
 
@@ -40,6 +42,7 @@ public class OAuthClientRequestInterceptor implements ClientHttpRequestIntercept
                     .build());
 
             if(authorizedClient == null){
+                log.error("Authorization exception");
                 throw new AuthorizationException("authorized client is null");
             }
             request.getHeaders().setBearerAuth(authorizedClient.getAccessToken().getTokenValue());

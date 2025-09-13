@@ -1,6 +1,7 @@
 package ru.taf.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,6 +17,7 @@ import ru.taf.repositories.BooksRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookFillingEventListener {
@@ -33,12 +35,16 @@ public class BookFillingEventListener {
             @CacheEvict(value = "books", allEntries = true)
     })
     public void handleBookUpload(BookFillingEvent event) {
+        log.info("Start book filling. Event={}", event);
         if (event == null) {
-            throw new RuntimeException("Sth went wrong");
+            log.error("Error wile filling book. Event is null");
+            throw new RuntimeException("Event is null");
         }
 
-        Book book = booksRepository.findById(event.bookId()).orElseThrow(() ->
-                new BookNotFoundException("book not found", event.bookId()));
+        Book book = booksRepository.findById(event.bookId()).orElseThrow(() -> {
+            log.error("Book not found. Event={}", event);
+            return new BookNotFoundException("book not found", event.bookId());
+        });
 
         int numberOfPage = 0;
         for (var chapter : event.chapters()) {
@@ -68,5 +74,6 @@ public class BookFillingEventListener {
         }
         book.setNumberOfPage(numberOfPage);
         booksRepository.save(book);
+        log.info("Book successfully filled. BookId={}", book.getId());
     }
 }

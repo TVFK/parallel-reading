@@ -3,6 +3,7 @@ package ru.taf.services;
 import io.minio.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +13,7 @@ import ru.taf.exceptions.FileUploadException;
 import java.util.Objects;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MinioService implements S3Service {
@@ -42,7 +44,9 @@ public class MinioService implements S3Service {
 
 
     private String uploadFile(MultipartFile file, String bucketName) {
+        log.info("File uploading. Bucket={}, fileName={}", bucketName, file.getOriginalFilename());
         if (file.isEmpty() || file.getOriginalFilename() == null) {
+            log.error("File upload exception. Bucket={}, fileName={}", bucketName, file.getOriginalFilename());
             throw new FileUploadException("file must have name");
         }
 
@@ -57,8 +61,10 @@ public class MinioService implements S3Service {
                             .contentType(file.getContentType())
                             .build()
             );
+            log.info("File uploaded successfully. Bucket={}, fileKey={}", bucketName, fileName);
             return fileName;
         } catch (Exception ex) {
+            log.error("File creation exception", ex);
             throw new FileUploadException(ex.getMessage());
         }
     }
@@ -89,6 +95,7 @@ public class MinioService implements S3Service {
                         .build());
             }
         } catch (Exception ex) {
+            log.error("Bucket creation exception", ex);
             throw new BucketCreateException("Failed to create bucket: " + ex.getMessage());
         }
     }

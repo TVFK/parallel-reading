@@ -1,6 +1,7 @@
 package ru.taf.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import ru.taf.repositories.DictionaryCardRepository;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -32,8 +34,10 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public DictionaryCardDTO getDictionaryCardById(UUID cardId) {
-        DictionaryCard dictionaryCard = cardRepository.findById(cardId).orElseThrow(() ->
-                new DictionaryCardNotFoundException("dictionary_card.not_found"));
+        DictionaryCard dictionaryCard = cardRepository.findById(cardId).orElseThrow(() -> {
+            log.error("Dictionary card not found. CardId={}", cardId);
+            return new DictionaryCardNotFoundException("dictionary_card.not_found");
+        });
 
         return cardMapper.toDto(dictionaryCard);
     }
@@ -96,6 +100,7 @@ public class DictionaryServiceImpl implements DictionaryService {
                     card.setTags(dictionaryCardDTO.tags());
 
                 }, () -> {
+                    log.error("Dictionary card not found. CardId={}", cardId);
                     throw new DictionaryCardNotFoundException("dictionary_card.not_found");
                 });
     }
@@ -107,6 +112,7 @@ public class DictionaryServiceImpl implements DictionaryService {
                 new DictionaryCardNotFoundException("dictionary_card.not_found")
         );
         if (!card.getUser().getId().equals(userId)) {
+            log.error("Access Denied Exception. UserId={}, CardId={}", userId, cardId);
             throw new AccessDeniedException("You don't have permission to perform this action");
         }
         cardRepository.deleteById(cardId);
@@ -115,10 +121,13 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Override
     @Transactional
     public void reviewCard(UUID userId, ReviewCardDTO reviewDTO) {
-        DictionaryCard card = cardRepository.findById(reviewDTO.cardId())
-                .orElseThrow(() -> new DictionaryCardNotFoundException("dictionary_card.not_found"));
+        DictionaryCard card = cardRepository.findById(reviewDTO.cardId()) .orElseThrow(() -> {
+            log.error("Dictionary card not found. ReviewDTO={}", reviewDTO);
+            return  new DictionaryCardNotFoundException("dictionary_card.not_found");
+        });
 
         if (!card.getUser().getId().equals(userId)) {
+            log.error("Access Denied Exception. UserId={}, ReviewDTO={}", userId, reviewDTO);
             throw new AccessDeniedException("You don't have permission to perform this action");
         }
 

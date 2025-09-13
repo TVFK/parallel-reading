@@ -1,6 +1,7 @@
 package ru.taf.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.taf.client.BooksRestClient;
@@ -9,6 +10,7 @@ import ru.taf.dto.BookUploadEvent;
 import ru.taf.dto.NewBookDTO;
 import ru.taf.exceptions.BookCreationException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BooksService {
@@ -38,6 +40,7 @@ public class BooksService {
 
             return createdBook;
         } catch (Exception e) {
+            log.error("Error when creating book", e);
             throw new BookCreationException("Error when creating book: " + e.getMessage(), e);
         }
     }

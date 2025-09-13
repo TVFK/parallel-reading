@@ -1,6 +1,8 @@
 package ru.taf.client;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
@@ -16,6 +18,7 @@ import ru.taf.dto.UpdateBookDTO;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @RequiredArgsConstructor
 public class BooksRestClientImpl implements BooksRestClient {
 
@@ -40,6 +43,7 @@ public class BooksRestClientImpl implements BooksRestClient {
                     .retrieve()
                     .body(BookDTO.class);
         } catch (HttpClientErrorException.NotFound exception) {
+            log.error("Book not found {}", bookId, exception);
             throw new BookNotFoundException("book with id %d not found".formatted(bookId));
         }
     }
@@ -56,6 +60,7 @@ public class BooksRestClientImpl implements BooksRestClient {
         } catch (HttpClientErrorException.BadRequest exception) {
             ProblemDetail problemDetail = exception.getResponseBodyAs(ProblemDetail.class);
             List<String> errors = (List<String>) (problemDetail != null ? Objects.requireNonNull(problemDetail.getProperties()).get("errors") : List.of("Unknown error"));
+            log.error("Book update failed. book={}, errors={}, status={}", book, errors, exception.getStatusCode(), exception);
             throw new BadRequestException(errors);
         }
     }
@@ -79,6 +84,7 @@ public class BooksRestClientImpl implements BooksRestClient {
         } catch (HttpClientErrorException.BadRequest exception) {
             ProblemDetail problemDetail = exception.getResponseBodyAs(ProblemDetail.class);
             List<String> errors = (List<String>) (problemDetail != null ? Objects.requireNonNull(problemDetail.getProperties()).get("errors") : List.of("Unknown error"));
+            log.error("Book update failed. bookId={}, errors={}, status={}", bookId, errors, exception.getStatusCode(), exception);
             throw new BadRequestException(errors);
         }
     }
@@ -91,6 +97,7 @@ public class BooksRestClientImpl implements BooksRestClient {
                     .retrieve()
                     .toBodilessEntity();
         } catch (HttpClientErrorException.NotFound exception) {
+            log.error("Book not found {}", bookId, exception);
             throw new BookNotFoundException("Book with id: %d not found".formatted(bookId));
         }
     }

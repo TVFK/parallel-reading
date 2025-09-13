@@ -1,6 +1,7 @@
 package ru.taf.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -83,16 +85,20 @@ public class BooksServiceImpl implements BooksService {
     @Override
     public BookDTO getBookById(Integer bookId) {
 
-        Book book = booksRepository.findById(bookId).orElseThrow(() ->
-                new BookNotFoundException("book.not_found", bookId));
+        Book book = booksRepository.findById(bookId).orElseThrow(() -> {
+            log.error("Book not found. BookId={}", bookId);
+            return new BookNotFoundException("book.not_found", bookId);
+        });
 
         return bookMapper.toDto(book);
     }
 
     @Override
     public BookDTO getBookByTitle(String title) {
-        Book book = booksRepository.findByTitle(title).orElseThrow(() ->
-                new BookNotFoundException("book.not_found", title));
+        Book book = booksRepository.findByTitle(title).orElseThrow(() -> {
+            log.error("Book not found. Title={}", title);
+            return new BookNotFoundException("book.not_found", title);
+        });
 
         return bookMapper.toDto(book);
     }
@@ -111,6 +117,7 @@ public class BooksServiceImpl implements BooksService {
                     book.setPublishedYear(bookDTO.publishedYear());
                     book.setDescription(bookDTO.description());
                 }, () -> {
+                    log.error("Book not found. BookId={}", bookId);
                     throw new BookNotFoundException("book.not_found", bookId);
                 });
     }

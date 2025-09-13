@@ -17,7 +17,6 @@ import java.util.List;
 public class ChaptersRestController {
 
     private final ChaptersService chaptersService;
-    private final PagesService pagesService;
 
     @GetMapping
     public List<ChapterDTO> getAllChaptersByBook(@PathVariable("bookId") Integer bookId) {

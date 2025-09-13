@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <springProperty name="APP_NAME" source="spring.application.name" defaultValue="unknown-app"/>
+    <springProperty name="LOKI_URL" source="loki.url" defaultValue=""/>
+
+    <if condition='!"${LOKI_URL}".isEmpty()'>
+        <then>
+            <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+                <http>
+                    <url>${LOKI_URL}/loki/api/v1/push</url>
+                </http>
+                <format>
+                    <label>
+                        <pattern>app=${APP_NAME},host=${HOSTNAME},level=%level</pattern>
+                    </label>
+                    <message>
+                        <pattern>
+                            {"time":"%date{ISO8601}","level":"%level","logger":"%logger","thread":"%thread","message":"%message","exception":"%ex"}
+                        </pattern>
+                    </message>
+                    <sortByTime>true</sortByTime>
+                </format>
+            </appender>
+
+            <root level="info">
+                <appender-ref ref="CONSOLE"/>
+                <appender-ref ref="LOKI"/>
+            </root>
+        </then>
+        <else>
+            <root level="info">
+                <appender-ref ref="CONSOLE"/>
+            </root>
+        </else>
+    </if>
+</configuration>

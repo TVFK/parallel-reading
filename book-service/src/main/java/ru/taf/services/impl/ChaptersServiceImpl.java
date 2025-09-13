@@ -1,6 +1,7 @@
 package ru.taf.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import ru.taf.services.ChaptersService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -42,8 +44,10 @@ public class ChaptersServiceImpl implements ChaptersService {
     @Transactional
     @Override
     public void create(int bookId, Chapter chapter) {
-        Book book = booksRepository.findById(bookId).orElseThrow(() ->
-                new BookNotFoundException("book.not_found", bookId));
+        Book book = booksRepository.findById(bookId).orElseThrow(() -> {
+            log.error("Book not found. BookId={}", bookId);
+            return new BookNotFoundException("book.not_found", bookId);
+        });
 
         chapter.setBook(book);
 

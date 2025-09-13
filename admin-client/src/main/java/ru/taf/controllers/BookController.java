@@ -2,6 +2,7 @@ package ru.taf.controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import ru.taf.client.BooksRestClient;
 import ru.taf.exceptions.BadRequestException;
 import ru.taf.dto.BookDTO;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/books/{bookId:\\d+}")

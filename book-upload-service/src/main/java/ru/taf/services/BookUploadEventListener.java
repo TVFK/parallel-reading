@@ -1,6 +1,7 @@
 package ru.taf.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import ru.taf.dto.Chapter;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookUploadEventListener {
@@ -29,7 +31,8 @@ public class BookUploadEventListener {
             List<Chapter> chapters = bookParserService.parseBook(event);
             sendMessage(event.bookId(), chapters);
         } catch (Exception e) {
-            throw new RuntimeException("ОШИБКА ПРИ ПАРСИНГЕ ТЕКСТА КНИГИ: " + e.getMessage(), e);
+            log.error("Error with creation book. Event={}", event, e);
+            throw new RuntimeException("Error with creation book: " + e.getMessage(), e);
         }
     }
 

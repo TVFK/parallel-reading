@@ -1,6 +1,7 @@
 package ru.taf.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import org.springframework.stereotype.Service;
 import ru.taf.dto.BookUploadEvent;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookParserService {
@@ -29,7 +31,10 @@ public class BookParserService {
         List<ChapterContent> translatedChapters = splitIntoChapters(translatedText);
 
         if (originalChapters.size() != translatedChapters.size()) {
-            throw new RuntimeException("Количество глав в оригинале и переводе не совпадает" + originalChapters.size() + " ПРОТИВ " + translatedChapters.size());
+            log.error("Number of chapters in the translation and the original differs. OriginalChapters={}, TranslationChapters={}. OrigChapters={}. TranChapters={}",
+                    originalChapters.size(), translatedChapters.size(), originalChapters, translatedChapters);
+            throw new RuntimeException("Number of chapters in the translation and the original differs" +
+                    originalChapters.size() + " VS " + translatedChapters.size());
         }
 
         List<Chapter> chapters = new ArrayList<>();
@@ -71,7 +76,6 @@ public class BookParserService {
             previousEnd = matcher.end();
         }
 
-        // Добавляем последнюю главу
         if (previousEnd < text.length()) {
             String content = text.substring(previousEnd).trim();
             String title = extractChapterTitle(text, previousEnd);

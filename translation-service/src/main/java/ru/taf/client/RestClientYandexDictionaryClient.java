@@ -1,6 +1,7 @@
 package ru.taf.client;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponents;
@@ -15,6 +16,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class RestClientYandexDictionaryClient implements YandexDictionaryClient {
 
@@ -37,16 +39,20 @@ public class RestClientYandexDictionaryClient implements YandexDictionaryClient 
                         .build())
                 .retrieve()
                 .onStatus(status -> status.value() == 402, (req, res) -> {
+                    log.error("Api key blocked. Status={}, Request={}, Response={}", res.getStatusCode(), req, res);
                     throw new ApiKeyBlockedException();
                 })
                 .onStatus(status -> status.value() == 403, (req, res) -> {
+                    log.error("Api key blocked. Status={}, Request={}, Response={}", res.getStatusCode(), req, res);
                     throw new DailyLimitExceededException();
                 })
                 .onStatus(status -> status.value() == 413, (req, res) -> {
+                    log.error("Api key blocked. Status={}, Request={}, Response={}", res.getStatusCode(), req, res);
                     throw new TextTooLongException();
                 })
                 .onStatus(HttpStatusCode::isError, (req, res) -> {
                     String body = new String(res.getBody().readAllBytes(), StandardCharsets.UTF_8);
+                    log.error("Api key blocked. Status={}, Request={}, Response={}", res.getStatusCode(), req, res);
                     throw new YandexDictionaryException(res.getStatusCode(), body);
                 })
                 .body(YandexDictionaryResponse.class);

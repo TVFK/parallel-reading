@@ -1,6 +1,7 @@
 package ru.taf.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import ru.taf.services.PagesService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -24,8 +26,11 @@ public class PagesServiceImpl implements PagesService {
 
     @Override
     public PageDTO findPageByNumber(Integer bookId, int pageNumber) {
-        Page page = pagesRepository.findPageByPageNumberAndBookId(bookId, pageNumber).orElseThrow(() ->
-                new PageNotFoundException("page.not_found", pageNumber));
+        Page page = pagesRepository.findPageByPageNumberAndBookId(bookId, pageNumber).orElseThrow(() -> {
+            log.error("Page not found. BookId={}, PageNumer={}", bookId, pageNumber);
+            return new PageNotFoundException("page.not_found", pageNumber);
+        });
+
 
         return pageMapper.toDto(page);
     }
@@ -41,16 +46,20 @@ public class PagesServiceImpl implements PagesService {
     // FIXME сделать нормальную реализацию
     @Override
     public PageDTO getNextPage(Integer pageId) {
-        Page page = pagesRepository.findById(pageId + 1).orElseThrow(() ->
-                new PageNotFoundException("page.not_found", pageId));
+        Page page = pagesRepository.findById(pageId + 1).orElseThrow(() -> {
+            log.error("Page not found. PageId={}", pageId);
+            return new PageNotFoundException("page.not_found", pageId);
+        });
 
         return pageMapper.toDto(page);
     }
 
     @Override
     public PageDTO getPrevPage(Integer pageId) {
-        Page page = pagesRepository.findById(pageId-1).orElseThrow(() ->
-                new PageNotFoundException("page.not_found", pageId));
+        Page page = pagesRepository.findById(pageId + 1).orElseThrow(() -> {
+            log.error("Page not found. PageId={}", pageId);
+            return new PageNotFoundException("page.not_found", pageId);
+        });
 
         return pageMapper.toDto(page);
     }
@@ -58,8 +67,10 @@ public class PagesServiceImpl implements PagesService {
     @Override
     @Cacheable(value = "ChapterService::getFirstPage", key = "#chapterId")
     public PageDTO getFirstPage(Integer chapterId) {
-        Page page = pagesRepository.findFirstByChapter_Id(chapterId).orElseThrow(() ->
-                new PageNotFoundException("Page for this chapter not found", chapterId));
+        Page page = pagesRepository.findFirstByChapter_Id(chapterId).orElseThrow(() -> {
+            log.error("First page of chapter not found. ChapterId={}", chapterId);
+            return new PageNotFoundException("Page for this chapter not found", chapterId);
+        });
 
         return pageMapper.toDto(page);
     }

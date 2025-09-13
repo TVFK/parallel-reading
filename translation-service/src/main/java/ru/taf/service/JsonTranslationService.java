@@ -4,6 +4,7 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.taf.client.YandexDictionaryClient;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JsonTranslationService implements TranslationService {
@@ -24,9 +26,15 @@ public class JsonTranslationService implements TranslationService {
     @Override
     @Cacheable(value = "translation", key = "#text")
     public DefaultJsonTranslationResponse getTranslation(String text, String ui, Integer flags) {
+
+        log.info("Start get translation. Word={}, ui={}, flags={}", text, ui, flags);
+
         String lemma = getLemma(text);
+        log.info("Successfully get lemma. Word={}, Lemma={}", text, lemma);
 
         YandexDictionaryResponse yandexResponse = yandexDictClient.getJsonTranslation(lemma, ui, flags);
+        log.info("Translation get successfully. Word={}, Translation={}", text, yandexResponse);
+
         return mapToDefaultResponse(yandexResponse);
     }
 
@@ -44,6 +52,7 @@ public class JsonTranslationService implements TranslationService {
                     })
                     .collect(Collectors.joining(" "));
         } catch (Exception e) {
+            log.error("Error while getting lemma. Word={}", text, e);
             return text;
         }
     }
