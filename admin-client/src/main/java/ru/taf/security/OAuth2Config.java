@@ -16,25 +16,23 @@ public class OAuth2Config {
         OAuth2ClientProperties.Registration reg = properties.getRegistration().get("keycloak");
         OAuth2ClientProperties.Provider prov = properties.getProvider().get("keycloak");
 
-        ClientRegistration.Builder builder = ClientRegistration.withRegistrationId("keycloak")
+        ClientRegistration cr = ClientRegistration.withRegistrationId("keycloak")
                 .clientId(reg.getClientId())
                 .clientSecret(reg.getClientSecret())
                 .authorizationGrantType(new AuthorizationGrantType(reg.getAuthorizationGrantType()))
                 .redirectUri(reg.getRedirectUri())
                 .scope(reg.getScope())
-                .userNameAttributeName(prov.getUserNameAttribute());
+                .authorizationUri(prov.getAuthorizationUri())
+                .tokenUri(prov.getTokenUri())
+                .userInfoUri(prov.getUserInfoUri())
+                .jwkSetUri(prov.getJwkSetUri())
+                .userNameAttributeName(prov.getUserNameAttribute())
+                .build();
 
-        String issuerUri = prov.getIssuerUri();
-        if (issuerUri != null && !issuerUri.isEmpty()) {
-            builder.issuerUri(issuerUri);
-        } else {
-            builder.authorizationUri(prov.getAuthorizationUri())
-                    .tokenUri(prov.getTokenUri())
-                    .userInfoUri(prov.getUserInfoUri())
-                    .jwkSetUri(prov.getJwkSetUri());
-        }
+        ClientRegistration updated = ClientRegistration.withClientRegistration(cr)
+                .issuerUri("https://boolkus.ru/auth/realms/boolkus")
+                .build();
 
-        ClientRegistration cr = builder.build();
-        return new InMemoryClientRegistrationRepository(cr);
+        return new InMemoryClientRegistrationRepository(updated);
     }
 }
