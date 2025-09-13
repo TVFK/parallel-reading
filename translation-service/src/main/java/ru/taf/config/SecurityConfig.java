@@ -18,6 +18,8 @@ public class SecurityConfig {
             Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/actuator/**").hasAuthority("SCOPE_metrics")
                         .requestMatchers(HttpMethod.GET).hasAuthority("SCOPE_view_translation")
                         .anyRequest().denyAll())
                 .csrf(CsrfConfigurer::disable)

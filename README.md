@@ -50,7 +50,7 @@ git clone https://github.com/TVFK/parallel-reading.git
 mvn clean package -DskipTests
 ```
 
-3 **Start all services**
+3. **Start all services**
 
 ```shell
 docker compose up -d --build

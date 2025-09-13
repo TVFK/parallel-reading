@@ -1,0 +1,60 @@
+scrape_configs:
+  - job_name: book_service
+    static_configs:
+      - targets: ["http://book-service:8080"]
+        labels:
+          application: book-service
+    metrics_path: /actuator/prometheus
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: ZSQdV4y7Y1vplkC4ZPi3MChJhmOPRCEF
+      token_url:  http://keycloak:8080/realms/boolkus/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+
+  - job_name: translation_service
+    static_configs:
+      - targets: [ "http://translation-service:8081" ]
+        labels:
+          application: translation-service
+    metrics_path: /actuator/prometheus
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: ZSQdV4y7Y1vplkC4ZPi3MChJhmOPRCEF
+      token_url: http://keycloak:8080/realms/boolkus/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+
+  - job_name: admin_client
+    static_configs:
+      - targets: [ "http://admin-client:8083" ]
+        labels:
+          application: admin-client
+    metrics_path: /actuator/prometheus
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: ZSQdV4y7Y1vplkC4ZPi3MChJhmOPRCEF
+      token_url: http://keycloak:8080/realms/boolkus/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
+
+  - job_name: dictionary_service
+    static_configs:
+      - targets: [ "http://dictionary-service:8085" ]
+        labels:
+          application: dictionary-service
+    metrics_path: /actuator/prometheus
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: ZSQdV4y7Y1vplkC4ZPi3MChJhmOPRCEF
+      token_url: http://keycloak:8080/realms/boolkus/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials

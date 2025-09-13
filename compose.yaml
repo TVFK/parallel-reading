@@ -47,7 +47,7 @@ services:
       KC_METRICS_ENABLED: true
       KC_HEALTH_ENABLED: true
     volumes:
-      - './config/keycloak/import:/opt/keycloak/data/import'
+      - './config/keycloak/import/dev:/opt/keycloak/data/import'
       - './config/keycloak/themes:/opt/keycloak/themes'
     command: start-dev --import-realm
     networks:

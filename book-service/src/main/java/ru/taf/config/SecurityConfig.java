@@ -21,6 +21,8 @@ public class SecurityConfig {
             Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/actuator/**").hasAuthority("SCOPE_metrics")
                         .requestMatchers(HttpMethod.POST).hasAuthority("SCOPE_edit_books")
                         .requestMatchers(HttpMethod.PATCH).hasAuthority("SCOPE_edit_books")
                         .requestMatchers(HttpMethod.DELETE).hasAuthority("SCOPE_edit_books")
