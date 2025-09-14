@@ -327,6 +327,7 @@ services:
         JAR_FILE: book-upload-service/target/*-exec.jar
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      BASE_URL: ${BASE_URL}
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     networks:

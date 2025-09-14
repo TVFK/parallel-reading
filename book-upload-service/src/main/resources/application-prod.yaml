@@ -3,6 +3,12 @@ server:
 spring:
   application:
     name: book-upload-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${BASE_URL}/auth/realms/boolkus
+          jwk-set-uri: http://keycloak:8080/realms/boolkus/protocol/openid-connect/certs
   kafka:
     bootstrap-servers: kafka:9094
     consumer:
