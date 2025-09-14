@@ -221,7 +221,7 @@ services:
     networks:
       - boolkus-net
     healthcheck:
-      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8428/health" ]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8428/health | grep -q 'OK' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -237,7 +237,7 @@ services:
     networks:
       - boolkus-net
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3200/ready" ]
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:3200/status/version || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -251,7 +251,7 @@ services:
     networks:
       - boolkus-net
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3100/ready" ]
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:3100/loki/api/v1/status/buildinfo || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -271,7 +271,7 @@ services:
     networks:
       - boolkus-net
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3000/api/health" ]
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:3000/api/health || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 5
