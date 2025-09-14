@@ -4,14 +4,18 @@
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
     <springProperty name="APP_NAME" source="spring.application.name" defaultValue="unknown-app"/>
-    <springProperty name="LOKI_URL" source="loki.url" defaultValue=""/>
 
-    <if condition='!"${LOKI_URL}".isEmpty()'>
+    <if condition='!"${BASE_URL}".isEmpty()'>
         <then>
             <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
                 <http>
-                    <url>${LOKI_URL}/loki/api/v1/push</url>
+                    <url>http://loki:3100/loki/api/v1/push</url>
                 </http>
+                <batch>
+                    <maxItems>1000</maxItems>
+                    <maxBytes>4194304</maxBytes>
+                    <timeoutMs>60000</timeoutMs>
+                </batch>
                 <format>
                     <label>
                         <pattern>app=${APP_NAME},host=${HOSTNAME},level=%level</pattern>
