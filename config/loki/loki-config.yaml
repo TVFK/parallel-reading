@@ -27,7 +27,6 @@ schema_config:
         period: 24h
 
 limits_config:
-  # Настройки лимитов для предотвращения "too many outstanding requests"
   ingestion_rate_mb: 4
   ingestion_burst_size_mb: 8
   max_entries_limit_per_query: 5000
