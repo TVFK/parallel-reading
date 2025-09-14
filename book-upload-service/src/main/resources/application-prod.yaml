@@ -26,5 +26,24 @@ minio:
   access-key: ${MINIO_ROOT_USER}
   secret-key: ${MINIO_ROOT_PASSWORD}
   bucket: texts
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - prometheus
+  endpoint:
+    health:
+      show-details: always
+  zipkin:
+    tracing:
+      endpoint: http://tempo:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 0.3
+
 loki:
   url: http://loki:3100

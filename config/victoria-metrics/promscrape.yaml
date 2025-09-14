@@ -58,3 +58,18 @@ scrape_configs:
         - metrics
       endpoint_params:
         grant_type: client_credentials
+
+  - job_name: book_upload_service
+    static_configs:
+      - targets: [ "http://book-upload-service:8086" ]
+        labels:
+          application: book-upload-service
+    metrics_path: /actuator/prometheus
+    oauth2:
+      client_id: victoria-metrics
+      client_secret: ZSQdV4y7Y1vplkC4ZPi3MChJhmOPRCEF
+      token_url: http://keycloak:8080/realms/boolkus/protocol/openid-connect/token
+      scopes:
+        - metrics
+      endpoint_params:
+        grant_type: client_credentials
