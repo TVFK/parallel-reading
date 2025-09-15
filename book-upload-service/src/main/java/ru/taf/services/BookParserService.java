@@ -63,7 +63,7 @@ public class BookParserService {
 
     private List<ChapterContent> splitIntoChapters(String text) {
         List<ChapterContent> chapters = new ArrayList<>();
-        Pattern pattern = Pattern.compile("(?im)^(CHAPTER|ГЛАВА)\\s+[IVXLCDM0-9]+.*$");
+        Pattern pattern = Pattern.compile("(?im)^(CHAPTER|Chapter|ГЛАВА|Глава)\\s+[IVXLCDM0-9]+.*$");
         Matcher matcher = pattern.matcher(text);
 
         int previousEnd = 0;
