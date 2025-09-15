@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -63,7 +64,7 @@ public class BookParserService {
 
     private List<ChapterContent> splitIntoChapters(String text) {
         List<ChapterContent> chapters = new ArrayList<>();
-        Pattern pattern = Pattern.compile("(?im)^(CHAPTER|Chapter|ГЛАВА|Глава)\\s+[IVXLCDM0-9]+.*$");
+        Pattern pattern = Pattern.compile("(?im)^(CHAPTER|Chapter|ГЛАВА|Глава)[^\\w\\n]*[IVXLCDM0-9]+.*$");
         Matcher matcher = pattern.matcher(text);
 
         int previousEnd = 0;
@@ -86,12 +87,26 @@ public class BookParserService {
     }
 
     private String extractChapterTitle(String text, int position) {
+        if (position < 0 || position > text.length()) {
+            return "";
+        }
+
         int lineStart = text.lastIndexOf("\n", position);
-        if (lineStart == -1) lineStart = 0;
-        else lineStart++;
+        if (lineStart == -1) {
+            lineStart = 0;
+        } else {
+            lineStart++;
+        }
 
         int lineEnd = text.indexOf("\n", position);
-        if (lineEnd == -1) lineEnd = text.length();
+        if (lineEnd == -1) {
+            lineEnd = text.length();
+        }
+
+        if (lineStart > lineEnd) {
+            log.warn("Invalid line boundaries: lineStart={}, lineEnd={}", lineStart, lineEnd);
+            return "";
+        }
 
         return text.substring(lineStart, lineEnd).trim();
     }
