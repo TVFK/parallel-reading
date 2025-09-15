@@ -8,11 +8,13 @@ A platform for parallel reading of books in foreign languages with an integrated
 - [Architecture](#architecture)
     - [Services](#services)
     - [Infrastructure](#infrastructure)
+    - [Spring profiles](#spring-profiles)
 - [Quick Start using Docker Compose](#quick-start-using-docker-compose)
+- [Prod deployment](#prod-deployment)
 
 ## Architecture
 
-![Architecture scheme](./docs/architectural_scheme.png)
+![Architecture scheme](./docs/architectural_scheme_v3.png)
 
 ### Services
 
@@ -35,8 +37,20 @@ The system consists of the following microservices:
 4) **MinIO** - stores book covers and texts
 5) **Keycloak** - OAuth 2.0/OIDC authentication
 6) **Nginx** - reverse proxy and static content distribution
+7) **Victoria Metrics** - collection of metrics
+8) **Grafana Loki** - log collection
+9) **Grafana Tempo** - collecting traces
+10) **Grafana** - visualization of metrics, logs and traces
+
+### Spring profiles
+
+1) **standalone** - for local Spring services startup without Docker
+2) **docker** - local startup of all services without HTTPS, nginx, monitoring etc.
+3) **prod** - for production deployment
 
 ## Quick Start using Docker Compose
+
+The entire application can be run locally using the compose.yaml file, all services will be deployed on localhost
 
 1. **Clone the repository**
 
@@ -70,3 +84,61 @@ Translation service requires:
 YANDEX_DICT_API_KEY=your_yandex_dictionary_key
 ```
 API key for Yandex Dictionary can be obtained at https://yandex.ru/dev/dictionary/
+
+## Prod deployment
+
+1. **Clone the repository**
+
+```shell
+git clone https://github.com/TVFK/parallel-reading.git
+```
+
+2. **Creating Environment variables**
+
+In the root of the project next to **compose.prod.yaml** it is necessary to create a **.env** file with these variables:
+
+```text
+BASE_URL=
+DOMAIN=
+
+# Keycloak variables
+KEYCLOAK_DB_PASSWORD=
+KEYCLOAK_ADMIN_LOGIN=
+KEYCLOAK_ADMIN_PASSWORD=
+
+# Minio variables
+MINIO_ROOT_USER=
+MINIO_ROOT_PASSWORD=
+
+# Services db
+BOOKS_DB_PASSWORD=
+DICTIONARY_DB_PASSWORD=
+
+# Services cache
+BOOKS_SERVICE_CACHE_PASSWORD=
+TRANSLATION_SERVICE_CACHE_PASSWORD=
+
+GRAFANA_ADMIN_PASSWORD=
+
+YANDEX_DICT_API_KEY=
+```
+
+3. **Building Spring Services**
+
+```shell
+mvn clean package -DskipTests
+```
+
+4. **Configuring nginx**
+
+In the **config/nginx/prod/nginx-prod.conf** file, you need to change the domain to your own
+
+5. **Obtaining a TLS certificate**
+
+To work with **HTTPS** you need to get certificates. You can do this using [certbot](https://certbot.eff.org /)
+
+6. **Starting compose.prod.yaml**
+
+```shell
+docker-compose -f compose.prod.yaml up -d --build
+```
