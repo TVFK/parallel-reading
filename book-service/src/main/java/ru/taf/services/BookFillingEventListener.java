@@ -35,14 +35,14 @@ public class BookFillingEventListener {
             @CacheEvict(value = "books", allEntries = true)
     })
     public void handleBookUpload(BookFillingEvent event) {
-        log.info("Start book filling. Event={}", event);
         if (event == null) {
             log.error("Error wile filling book. Event is null");
             throw new RuntimeException("Event is null");
         }
+        log.info("Start book filling. BookId={}", event.bookId());
 
         Book book = booksRepository.findById(event.bookId()).orElseThrow(() -> {
-            log.error("Book not found. Event={}", event);
+            log.error("Book not found. BookId={}", event.bookId());
             return new BookNotFoundException("book not found", event.bookId());
         });
 
