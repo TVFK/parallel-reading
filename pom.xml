@@ -19,7 +19,6 @@
         <module>translation-service</module>
         <module>dictionary-service</module>
         <module>book-upload-service</module>
-        <module>auth-service</module>
     </modules>
 
 	<properties>
