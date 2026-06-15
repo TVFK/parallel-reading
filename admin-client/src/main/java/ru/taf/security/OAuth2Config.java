@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 @Configuration
 public class OAuth2Config {
 
-    @Value("${BASE_URL}")
+    @Value("${BASE_URL:http://localhost}")
     private String baseUrl;
 
     @Bean
